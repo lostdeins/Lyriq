@@ -1,0 +1,1573 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Syncora — LRC maker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230B57D0'/%3E%3Cstop offset='1' stop-color='%2300315E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif' font-size='38' font-weight='800' fill='%23FFFFFF' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --r-xs: 8px; --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 28px;
+  --r-full: 999px;
+  --theme-dur: .5s;
+  --theme-curve: cubic-bezier(.4, 0, .2, 1);
+}
+[data-theme="dark"]{
+  --bg: #0F1218;
+  --surface: #13171F;
+  --surface-c-low: #191E27;
+  --surface-c: #1F2530;
+  --surface-c-high: #262D3A;
+  --primary: #A8C7FA;
+  --on-primary: #00315E;
+  --primary-c: #004A77;
+  --on-primary-c: #D3E3FD;
+  --secondary-c: #2B3A52;
+  --on-secondary-c: #D5E3F7;
+  --tertiary-c: #1E3A5F;
+  --on-tertiary-c: #CFE0F9;
+  --on-surface: #E3E7EE;
+  --on-surface-var: #A9B3C1;
+  --outline: #8A94A3;
+  --outline-var: #3E4756;
+  --error: #FFB4AB;
+  --shadow: 0 6px 20px rgba(0,0,0,.45);
+}
+[data-theme="light"]{
+  --bg: #F6F9FE;
+  --surface: #FFFFFF;
+  --surface-c-low: #F1F5FB;
+  --surface-c: #EAEFF7;
+  --surface-c-high: #E1E7F0;
+  --primary: #0B57D0;
+  --on-primary: #FFFFFF;
+  --primary-c: #D3E3FD;
+  --on-primary-c: #001D35;
+  --secondary-c: #D3E3FD;
+  --on-secondary-c: #001D35;
+  --tertiary-c: #CFE0F9;
+  --on-tertiary-c: #0A1F44;
+  --on-surface: #1A1C1E;
+  --on-surface-var: #43474E;
+  --outline: #74777F;
+  --outline-var: #C4C6CF;
+  --error: #BA1A1A;
+  --shadow: 0 6px 20px rgba(11,87,208,.10);
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{
+  margin:0;
+  height:100vh;
+  height:100dvh;
+  background:var(--bg);
+  color:var(--on-surface);
+  font:400 14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transition: opacity .22s cubic-bezier(.4,0,.2,1);
+}
+html.lang-anim body{ opacity: .25; }
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after{
+  transition:
+    background-color var(--theme-dur) var(--theme-curve),
+    color            var(--theme-dur) var(--theme-curve),
+    border-color     var(--theme-dur) var(--theme-curve),
+    box-shadow       var(--theme-dur) var(--theme-curve),
+    fill             var(--theme-dur) var(--theme-curve),
+    stroke           var(--theme-dur) var(--theme-curve),
+    outline-color    var(--theme-dur) var(--theme-curve) !important;
+  transition-delay: 0s !important;
+}
+button{
+  font:inherit;color:var(--on-surface);
+  background:transparent;border:none;
+  cursor:pointer;user-select:none;
+}
+button:disabled{opacity:.38;cursor:not-allowed}
+
+header{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px;
+  background:var(--surface);
+  border-bottom:1px solid var(--outline-var);
+  flex:none;
+}
+header .brand{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+header .brand svg{width:22px;height:22px;fill:var(--primary);flex:none}
+header .brand .title{
+  font-size:17px;font-weight:600;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+header .actions{display:flex;align-items:center;gap:4px;flex:none}
+
+main{
+  flex:1;
+  min-height:0;
+  padding:12px;
+  display:flex;flex-direction:column;gap:10px;
+  overflow:hidden;
+}
+
+.toolbar{
+  flex:none;
+  background:var(--surface-c-low);
+  border-radius:var(--r-md);
+  padding:8px 10px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.toolbar .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.toolbar .row.player-row{gap:4px}
+.toolbar .sep-vert{width:1px;height:22px;background:var(--outline-var);margin:0 4px;flex:none}
+
+.btn-icon{
+  width:36px;height:36px;border-radius:var(--r-full);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--on-surface-var);
+  transition:background-color .18s ease, color .18s ease;
+  flex:none;
+}
+.btn-icon:hover:not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent);color:var(--on-surface)}
+.btn-icon:active:not(:disabled){background:color-mix(in srgb,var(--on-surface) 14%,transparent)}
+.btn-icon svg{width:20px;height:20px;fill:currentColor}
+.btn-icon.primary{color:var(--on-primary);background:var(--primary)}
+.btn-icon.primary:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 85%,var(--on-primary));color:var(--on-primary)}
+.btn-icon.subtle{width:32px;height:32px;color:var(--on-surface-var);opacity:.85}
+.btn-icon.subtle svg{width:18px;height:18px}
+.btn-icon.subtle:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);opacity:1}
+
+#langBtn.active{
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+/* Иконка кнопки сворачивания — плавный поворот */
+#collapseBtn svg{
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+#collapseBtn.collapsed svg{
+  transform: rotate(180deg);
+}
+
+.btn-small{
+  height:36px;padding:0 14px;border-radius:var(--r-full);
+  background:var(--secondary-c);color:var(--on-secondary-c);
+  font-size:13px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:background-color .18s ease, color .18s ease, filter .15s ease;
+  flex:none;white-space:nowrap;
+}
+.btn-small:hover:not(:disabled){filter:brightness(1.08)}
+.btn-small.ghost{background:transparent;color:var(--primary);border:1px solid var(--outline)}
+.btn-small.ghost:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 8%,transparent)}
+
+.filename{
+  color:var(--on-surface-var);font-size:12.5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex:1;min-width:60px;
+}
+.time{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:12.5px;font-variant-numeric:tabular-nums;
+  background:var(--surface-c);border-radius:var(--r-full);
+  padding:6px 12px;color:var(--primary);flex:none;
+  white-space:nowrap;
+}
+.time .sep{color:var(--on-surface-var);margin:0 4px}
+.time .total{color:var(--on-surface-var)}
+
+.chip-label{color:var(--on-surface-var);font-size:12px;margin-right:2px;white-space:nowrap}
+.chip{
+  display:inline-flex;align-items:center;height:30px;padding:0 11px;
+  border-radius:var(--r-full);border:1px solid var(--outline-var);
+  color:var(--on-surface-var);font-size:12px;font-weight:500;
+  background:transparent;
+  transition:background-color .18s ease, color .18s ease, border-color .18s ease, padding .18s ease;
+  white-space:nowrap;flex:none;
+}
+.chip:hover:not(.active):not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent)}
+.chip.active{background:var(--secondary-c);color:var(--on-secondary-c);border-color:transparent;padding-left:9px}
+.chip.active::before{content:"✓";font-size:12px;margin-right:3px}
+
+/* ============ Панель текста песни ============ */
+.lyrics-panel{
+  flex:none;background:var(--surface-c-low);
+  border-radius:var(--r-md);padding:10px;
+  display:flex;flex-direction:column;gap:0;
+}
+.lyrics-panel .head{
+  display:flex;align-items:center;gap:8px;min-height:32px;
+}
+.lyrics-panel .head .label{
+  font-size:12px;color:var(--on-surface-var);font-weight:600;
+  letter-spacing:.4px;text-transform:uppercase;flex:none;
+}
+.lyrics-panel .head .spacer{flex:1;min-width:8px}
+
+/* Обёртка анимируемого тела панели */
+.lyrics-body{
+  display:grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .35s cubic-bezier(.4,0,.2,1);
+  margin-top: 8px;
+}
+.lyrics-panel.collapsed .lyrics-body{
+  grid-template-rows: 0fr;
+  margin-top: 0;
+}
+.lyrics-body-inner{
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* Внутренние элементы могут сжиматься, но анимация высоты идёт по .lyrics-body */
+}
+.lyrics-panel.collapsed .lyrics-body-inner{
+  /* Пока идёт анимация, оставляем невидимым — но только на время анимации
+     ничего не делаем, чтобы не мешать transition */
+}
+
+.lyrics-panel .hint-row{padding:0 2px}
+.lyrics-panel .hint{
+  font-size:11.5px;color:var(--on-surface-var);opacity:.85;line-height:1.8;
+}
+#src{
+  width:100%;min-height:120px;max-height:40vh;resize:vertical;
+  background:var(--surface-c);color:var(--on-surface);
+  border:1px solid var(--outline-var);border-radius:var(--r-sm);
+  padding:12px 14px;
+  font:14px/1.7 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  outline:none;transition:border-color .2s ease;
+}
+#src:focus{border-color:var(--primary)}
+
+kbd{
+  background:var(--surface-c-high);border:1px solid var(--outline-var);
+  border-bottom-width:2px;border-radius:5px;padding:1px 5px;
+  font:11px ui-monospace,monospace;color:var(--on-surface);
+}
+
+/* ===== ОБЁРТКА СЦЕНЫ ===== */
+.stage-wrap{
+  flex:1;
+  min-height:0;
+  background:var(--surface-c-low);
+  border-radius:var(--r-md);
+  position:relative;
+  overflow:hidden;
+}
+.stage{
+  position:absolute;
+  inset:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+  padding:24px 20px 40px;
+  background:transparent;
+}
+.stage .empty{
+  color:var(--on-surface-var);text-align:center;margin-top:6vh;
+  font-size:14.5px;line-height:2;
+}
+
+.line{
+  max-width:1100px;margin:0 auto 18px;padding:8px 12px 6px;
+  border-radius:var(--r-sm);cursor:pointer;color:inherit;
+  transition:background-color .2s ease, color .2s ease;
+}
+.line:hover{background:color-mix(in srgb,var(--on-surface) 4%,transparent)}
+.line.current{background:var(--primary-c);color:var(--on-primary-c)}
+.line.current .line-time{color:var(--on-primary-c);opacity:.85}
+.line-time{
+  display:inline-block;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:13px;color:var(--primary);margin-right:12px;
+  font-variant-numeric:tabular-nums;cursor:text;
+}
+
+.word{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  min-width:56px;padding:2px 6px 4px;margin:0 1px 4px;
+  border-radius:var(--r-xs);cursor:pointer;vertical-align:bottom;
+  transition:background-color .15s ease, box-shadow .15s ease;
+  position:relative;
+}
+.word:hover{background:color-mix(in srgb,var(--on-surface) 6%,transparent)}
+.word .w-time{
+  display:block;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:10px;line-height:1.2;font-variant-numeric:tabular-nums;
+  color:var(--on-surface-var);white-space:nowrap;
+  padding:1px 4px;margin-bottom:2px;border-radius:5px;
+  cursor:text;
+  transition:background-color .15s ease, color .15s ease, opacity .15s ease;
+  opacity:.85;
+}
+.word .w-time.empty{color:transparent;pointer-events:none}
+.word .w-time:not(.empty):hover{
+  background:color-mix(in srgb,var(--primary) 16%,transparent);
+  color:var(--primary);opacity:1;
+}
+.word .w-text{
+  display:block;font-size:16px;line-height:1.25;
+  color:inherit;white-space:nowrap;
+}
+.word.stamped .w-text{color:var(--primary);font-weight:500}
+.word.current{
+  background:var(--primary);
+  box-shadow:0 3px 12px color-mix(in srgb,var(--primary) 45%,transparent);
+}
+.word.current .w-text{color:var(--on-primary);font-weight:700}
+.word.current .w-time{color:var(--on-primary);opacity:1;font-weight:700}
+.word.current .w-time:not(.empty):hover{background:rgba(255,255,255,.18);color:var(--on-primary)}
+.line.current .word .w-text{color:var(--on-primary-c)}
+.line.current .word .w-time{color:var(--on-primary-c);opacity:.85}
+
+[data-mode="line"] .word{display:inline;min-width:0;padding:3px 8px;margin:0 2px 4px 0}
+[data-mode="line"] .word .w-time{display:none}
+[data-mode="line"] .word .w-text{display:inline}
+[data-mode="line"] .line-time{display:inline-block}
+[data-mode="word"] .line-time{display:none}
+
+footer{
+  flex:none;background:var(--surface);border-top:1px solid var(--outline-var);
+  padding:10px 16px;display:flex;align-items:center;gap:10px;
+}
+footer .counter{
+  color:var(--on-surface-var);font-size:12.5px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+#stampBtn{
+  flex:1;max-width:560px;height:52px;border-radius:var(--r-full);
+  background:var(--primary);color:var(--on-primary);
+  font-size:15px;font-weight:600;letter-spacing:.4px;
+  box-shadow:0 3px 12px color-mix(in srgb,var(--primary) 35%,transparent);
+  transition:filter .15s, transform .1s, box-shadow .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+#stampBtn:hover:not(:disabled){filter:brightness(1.08)}
+#stampBtn:active:not(:disabled){transform:scale(.985)}
+#stampBtn:disabled{background:var(--surface-c);color:var(--on-surface-var);box-shadow:none}
+#stampBtn.hit{animation:stampPulse .22s ease-out}
+@keyframes stampPulse{
+  0%{transform:scale(.97);box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 50%,transparent)}
+  100%{transform:scale(1);box-shadow:0 0 0 14px color-mix(in srgb,var(--primary) 0%,transparent)}
+}
+
+.ts-editor{
+  position:fixed;z-index:200;
+  display:flex;flex-direction:column;gap:8px;
+  padding:12px;
+  background:var(--tertiary-c);color:var(--on-tertiary-c);
+  border-radius:var(--r-lg);
+  box-shadow:0 8px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06) inset;
+  width:320px;
+  opacity:0;pointer-events:none;
+  transition:opacity .18s ease;
+}
+.ts-editor.show{opacity:1;pointer-events:auto}
+.ts-editor.above{transform:translate(-50%,-100%)}
+.ts-editor.below{transform:translate(-50%,0)}
+.ts-editor::after{
+  content:"";position:absolute;left:50%;
+  width:12px;height:12px;background:var(--tertiary-c);
+  transform:translateX(-50%) rotate(45deg);
+  pointer-events:none;
+}
+.ts-editor.above::after{bottom:-6px}
+.ts-editor.below::after{top:-6px}
+.ts-deltas{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ts-delta{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 6px 6px;border-radius:var(--r-md);
+  background:var(--primary-c);color:var(--on-primary-c);
+  font-weight:700;font-size:15px;line-height:1.05;
+  transition:filter .15s, transform .1s;
+}
+.ts-delta small{
+  font-size:9.5px;font-weight:500;opacity:.75;
+  letter-spacing:.6px;margin-top:3px;
+}
+.ts-delta:hover{filter:brightness(1.08)}
+.ts-delta:active{transform:scale(.95)}
+.ts-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.ts-action{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:10px 6px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.10);color:var(--on-tertiary-c);
+  font-size:12px;font-weight:600;white-space:nowrap;
+  transition:background-color .15s ease, transform .1s ease, filter .15s ease;
+}
+.ts-action:hover:not(:disabled){background:rgba(255,255,255,.18)}
+.ts-action:active:not(:disabled){transform:scale(.96)}
+.ts-action:disabled{opacity:.30;cursor:not-allowed}
+.ts-action svg{width:14px;height:14px;fill:currentColor;flex:none}
+.ts-action.now{background:var(--primary);color:var(--on-primary)}
+.ts-action.now:hover:not(:disabled){filter:brightness(1.10);background:var(--primary)}
+.ts-input-row{display:flex;gap:6px;align-items:stretch}
+.ts-input{
+  flex:1;min-width:0;
+  font:600 17px/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-variant-numeric:tabular-nums;
+  padding:11px 12px;border-radius:var(--r-md);
+  border:2px solid transparent;
+  background:rgba(255,255,255,.10);color:var(--on-tertiary-c);
+  outline:none;text-align:center;letter-spacing:.5px;
+  transition:border-color .15s, background-color .15s;
+}
+.ts-input:focus{border-color:var(--primary);background:rgba(255,255,255,.14)}
+.ts-input.error{border-color:var(--error)}
+.ts-done{
+  padding:0 18px;border-radius:var(--r-md);
+  background:var(--primary);color:var(--on-primary);
+  font-weight:700;font-size:13px;letter-spacing:.5px;
+  transition:filter .15s, transform .1s;
+}
+.ts-done:hover{filter:brightness(1.10)}
+.ts-done:active{transform:scale(.96)}
+
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:50;backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.dialog{
+  background:var(--surface-c);border-radius:var(--r-xl);
+  width:min(760px,100%);max-height:85vh;
+  display:flex;flex-direction:column;padding:22px;gap:14px;
+  box-shadow:var(--shadow);
+  transform:translateY(8px) scale(.97);opacity:0;
+  transition:transform .3s cubic-bezier(.2,0,0,1), opacity .25s ease;
+}
+.overlay.show .dialog{transform:translateY(0) scale(1);opacity:1}
+.dialog h3{margin:0;font-size:19px;font-weight:500}
+.dialog .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+#out{
+  flex:1;min-height:280px;resize:vertical;
+  background:var(--surface-c-low);color:var(--on-surface);
+  border:1px solid var(--outline-var);border-radius:var(--r-sm);
+  padding:14px;
+  font:13px/1.65 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  white-space:pre;overflow:auto;outline:none;
+}
+.btn-filled{
+  background:var(--primary);color:var(--on-primary);
+  border-radius:var(--r-full);padding:10px 22px;
+  font-weight:600;font-size:14px;
+}
+.btn-filled:hover{filter:brightness(1.08)}
+.btn-tonal{
+  background:var(--secondary-c);color:var(--on-secondary-c);
+  border-radius:var(--r-full);padding:10px 18px;
+  font-weight:500;font-size:14px;
+}
+.btn-tonal:hover{filter:brightness(1.06)}
+.btn-outline{
+  background:transparent;color:var(--primary);
+  border:1px solid var(--outline);border-radius:var(--r-full);
+  padding:10px 18px;font-weight:500;font-size:14px;
+}
+.btn-outline:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{
+  background:var(--outline-var);border-radius:5px;
+  border:2px solid transparent;background-clip:content-box;
+}
+::-webkit-scrollbar-thumb:hover{background:var(--outline);background-clip:content-box}
+
+@media (max-width: 560px){
+  main{ padding: 8px; gap: 8px; }
+  header{ padding: 6px 12px; gap: 8px; }
+  header .brand svg{ width: 20px; height: 20px; }
+  header .brand .title{ font-size: 16px; }
+  header .actions{ gap: 2px; }
+
+  .toolbar{ padding: 6px 8px; gap: 6px; border-radius: 12px; }
+  .toolbar .row{ gap: 6px; }
+  .toolbar .row.player-row{ gap: 4px; }
+  .toolbar .sep-vert{ height: 18px; margin: 0 3px; }
+
+  .btn-icon{ width: 34px; height: 34px; }
+  .btn-icon svg{ width: 18px; height: 18px; }
+  .btn-icon.subtle{ width: 30px; height: 30px; }
+  .btn-icon.subtle svg{ width: 16px; height: 16px; }
+  .btn-small{ height: 34px; padding: 0 12px; font-size: 12px; gap: 4px; }
+  .filename{ font-size: 11px; min-width: 40px; }
+  .time{ font-size: 11.5px; padding: 5px 9px; }
+  .chip{ height: 28px; padding: 0 10px; font-size: 11.5px; }
+  .chip.active{ padding-left: 8px; }
+  .chip-label{ font-size: 11.5px; }
+
+  .lyrics-panel{ padding: 8px; border-radius: 12px; }
+  .lyrics-panel .head{ min-height: 28px; gap: 6px; }
+  .lyrics-panel .head .label{ font-size: 11px; }
+  .lyrics-panel .hint{ font-size: 10.5px; line-height: 1.6; }
+  #src{
+    min-height: 70px;
+    max-height: 25vh;
+    padding: 8px 10px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    border-radius: 10px;
+  }
+
+  .stage-wrap{ border-radius: 12px; }
+  .stage{ padding: 18px 10px 30px; }
+  .line{ padding: 6px 8px; margin-bottom: 10px; }
+  .line-time{ font-size: 11px; margin-right: 8px; }
+  .word{ min-width: 44px; padding: 1px 4px 3px; margin: 0 1px 3px; }
+  .word .w-time{ font-size: 9px; padding: 0 3px; margin-bottom: 1px; }
+  .word .w-text{ font-size: 14px; }
+
+  footer{ padding: 6px 10px; gap: 6px; }
+  #stampBtn{ height: 46px; font-size: 13px; letter-spacing: .2px; gap: 6px; }
+  footer .counter{ font-size: 11px; }
+
+  kbd{ font-size: 10px; padding: 0 4px; }
+
+  .ts-editor{ width: 280px; padding: 10px; gap: 6px; }
+  .ts-delta{ padding: 7px 4px 5px; font-size: 14px; }
+  .ts-delta small{ font-size: 9px; }
+  .ts-action{ padding: 9px 4px; font-size: 11px; gap: 3px; }
+  .ts-action svg{ width: 12px; height: 12px; }
+  .ts-input{ font-size: 15px; padding: 9px 10px; }
+  .ts-done{ padding: 0 14px; font-size: 12px; }
+}
+
+@media (max-width: 400px){
+  .filename{ max-width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+    <span class="title">Syncora</span>
+  </div>
+  <div class="actions">
+    <button class="btn-icon" id="langBtn" title="Switch to Russian"
+            data-i18n-title="langTitle">
+      <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+    </button>
+    <button class="btn-icon" id="themeBtn" title="Change theme"
+            data-i18n-title="themeTitle">
+      <svg id="themeIcon" viewBox="0 0 24 24"></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <div class="row player-row">
+      <input type="file" id="file" accept="audio/*" hidden>
+      <button class="btn-small" id="openBtn">
+        <span data-i18n="open">Open</span>
+      </button>
+      <span class="filename" id="trackName">no file selected</span>
+      <span class="sep-vert"></span>
+      <button class="btn-icon" id="backBtn" data-i18n-title="backTitle" title="Back 3 seconds">
+        <svg viewBox="0 0 24 24"><path d="M12.5 3a9 9 0 1 0 8.5 12h-2.1a7 7 0 1 1-6.4-10v3l5-5-5-5v3zM11 16.5V9.5l4 3.5-4 3.5z"/></svg>
+      </button>
+      <button class="btn-icon primary" id="playBtn" data-i18n-title="playTitle" title="Play / Pause (P)">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="btn-icon" id="fwdBtn" data-i18n-title="fwdTitle" title="Forward 3 seconds">
+        <svg viewBox="0 0 24 24"><path d="M11.5 3a9 9 0 1 1-8.5 12h2.1a7 7 0 1 0 6.4-10v3l-5-5 5-5v3zM13 16.5V9.5l4 3.5-4 3.5z"/></svg>
+      </button>
+      <div class="time">
+        <span id="clock">00:00.00</span>
+        <span class="sep">/</span>
+        <span class="total" id="total">00:00.00</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="chip-label" data-i18n="modeLabel">Mode:</span>
+      <button class="chip active" data-mode="word" data-i18n="modeWord">Word-by-word</button>
+      <button class="chip" data-mode="line" data-i18n="modeLine">Line-by-line</button>
+      <span class="sep-vert"></span>
+      <span class="chip-label" data-i18n="speedLabel">Speed:</span>
+      <button class="chip" data-speed="0.5">0.5×</button>
+      <button class="chip" data-speed="0.65">0.65×</button>
+      <button class="chip" data-speed="0.75">0.75×</button>
+      <button class="chip" data-speed="0.85">0.85×</button>
+      <button class="chip active" data-speed="1">1×</button>
+      <button class="chip" data-speed="1.25">1.25×</button>
+      <button class="chip" data-speed="1.5">1.5×</button>
+      <button class="chip" data-speed="1.75">1.75×</button>
+      <button class="chip" data-speed="2">2×</button>
+    </div>
+  </div>
+
+  <div class="lyrics-panel" id="lyricsPanel">
+    <div class="head">
+      <span class="label" data-i18n="lyricsLabel">LYRICS</span>
+      <button class="btn-small ghost" id="parseBtn" data-i18n="parseBtn">Parse text</button>
+      <span class="spacer"></span>
+      <button class="btn-icon subtle" id="collapseBtn" title="Collapse lyrics">
+        <svg viewBox="0 0 24 24"><path d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+      </button>
+      <button class="btn-icon subtle" id="clearBtn"
+              data-i18n-title="clearTitle" title="Clear text and word split"
+              aria-label="Clear">
+        <svg viewBox="0 0 24 24"><path d="M15 16h4v2h-4zm0-8h7v2h-7zm0 4h6v2h-6zM3 18c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V8H3v10zm2-8h6v8H5v-8zm5-6H6L5 5H2v2h12V5h-3z"/></svg>
+      </button>
+    </div>
+
+    <!-- Обёртка с анимацией высоты -->
+    <div class="lyrics-body">
+      <div class="lyrics-body-inner">
+        <div class="hint-row">
+          <span class="hint" id="hintText" data-i18n-html="hint"></span>
+        </div>
+        <textarea id="src" data-i18n-placeholder="srcPlaceholder"
+                  placeholder="Paste the lyrics here.
+Each line = one LRC line."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-wrap">
+    <div class="stage" id="stage">
+      <div class="empty" id="emptyState" data-i18n-html="empty"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <button class="btn-icon" id="undoBtn" data-i18n-title="undoTitle" title="Undo last stamp (Backspace)">
+    <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+  </button>
+  <button id="stampBtn" disabled data-i18n="stampIdle">⏱ STAMP · Space</button>
+  <span class="counter" id="counter">—</span>
+  <button class="btn-icon" id="exportBtn" data-i18n-title="exportTitle" title="Export LRC">
+    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+  </button>
+</footer>
+
+<div class="ts-editor" id="tsEditor" hidden>
+  <div class="ts-deltas">
+    <button class="ts-delta" data-delta="-50"><span>−50</span><small>MS</small></button>
+    <button class="ts-delta" data-delta="-10"><span>−10</span><small>MS</small></button>
+    <button class="ts-delta" data-delta="10"><span>+10</span><small>MS</small></button>
+    <button class="ts-delta" data-delta="50"><span>+50</span><small>MS</small></button>
+  </div>
+
+  <div class="ts-actions">
+    <button class="ts-action" id="tsCopyPrev" data-i18n-title="prevTitle" title="Copy time from previous">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      <span data-i18n="prev">Prev</span>
+    </button>
+    <button class="ts-action now" id="tsPlayhead" data-i18n-title="playheadTitle" title="Set to current track position">
+      <svg viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+      <span data-i18n="playhead">Now</span>
+    </button>
+    <button class="ts-action" id="tsCopyNext" data-i18n-title="nextTitle" title="Copy time from next">
+      <span data-i18n="next">Next</span>
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+    </button>
+  </div>
+
+  <div class="ts-input-row">
+    <input class="ts-input" id="tsInput" type="text" inputmode="decimal"
+           spellcheck="false" autocomplete="off">
+    <button class="ts-done" id="tsDone" data-i18n="ok">OK</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog">
+    <h3 data-i18n="lrcTitle">Ready LRC</h3>
+    <textarea id="out" readonly></textarea>
+    <div class="actions">
+      <button class="btn-outline" id="dlBtn" data-i18n="dlBtn">⬇ Download .lrc</button>
+      <button class="btn-tonal" id="copyBtn" data-i18n="copyBtn">Copy</button>
+      <button class="btn-filled" id="closeOverlay" data-i18n="closeBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =============================================================
+   ЛОКАЛИЗАЦИЯ
+   ============================================================= */
+const I18N = {
+  en: {
+    langTitle: "Switch to Russian",
+    themeTitle: "Change theme",
+    open: "Open",
+    noFile: "no file selected",
+    backTitle: "Back 3 seconds",
+    playTitle: "Play / Pause (P)",
+    fwdTitle: "Forward 3 seconds",
+    modeLabel: "Mode:",
+    modeWord: "Word-by-word",
+    modeLine: "Line-by-line",
+    speedLabel: "Speed:",
+    lyricsLabel: "LYRICS",
+    parseBtn: "Parse text",
+    clearTitle: "Clear text and word split",
+    collapseTitle: "Collapse lyrics",
+    expandTitle: "Expand lyrics",
+    hint: '<kbd>Space</kbd> stamp · <kbd>Backspace</kbd> undo · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3s · <kbd>Shift</kbd>+click seek · click timestamp — edit',
+    srcPlaceholder: "Paste the lyrics here.\nEach line = one LRC line.",
+    empty: '1. Open an audio file<br>2. Paste the ready lyrics<br>3. Click "Parse text"<br>4. Press "STAMP" or Space to set timestamps<br>5. Click a word\'s timestamp to edit it manually',
+    undoTitle: "Undo last stamp (Backspace)",
+    stampIdle: "⏱ STAMP · Space",
+    stampDone: "✓ All words stamped",
+    exportTitle: "Export LRC",
+    prevTitle: "Copy time from previous word / line",
+    prev: "Prev",
+    playheadTitle: "Set to current track position",
+    playhead: "Now",
+    nextTitle: "Copy time from next word / line",
+    next: "Next",
+    ok: "OK",
+    lrcTitle: "Ready LRC",
+    dlBtn: "⬇ Download .lrc",
+    copyBtn: "Copy",
+    copyBtnDone: "✓ Copied",
+    closeBtn: "Close",
+    counterDone: "done",
+    noStamps: "No timestamps yet — nothing to export.",
+    confirmClear: "Clear the lyrics and word split?\nAll unsaved timestamps will be lost."
+  },
+  ru: {
+    langTitle: "Переключить на английский",
+    themeTitle: "Сменить тему",
+    open: "Открыть",
+    noFile: "файл не выбран",
+    backTitle: "Назад на 3 секунды",
+    playTitle: "Play / Pause (P)",
+    fwdTitle: "Вперёд на 3 секунды",
+    modeLabel: "Режим:",
+    modeWord: "Пословно",
+    modeLine: "Построчно",
+    speedLabel: "Скорость:",
+    lyricsLabel: "ТЕКСТ ПЕСНИ",
+    parseBtn: "Разобрать текст",
+    clearTitle: "Очистить текст и разбивку",
+    collapseTitle: "Свернуть текст",
+    expandTitle: "Развернуть текст",
+    hint: '<kbd>Space</kbd> метка · <kbd>Backspace</kbd> отменить · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3с · <kbd>Shift</kbd>+клик перейти · клик по таймкоду — правка',
+    srcPlaceholder: "Вставьте сюда текст песни.\nКаждая строка = одна строка LRC.",
+    empty: '1. Откройте аудиофайл<br>2. Вставьте готовый текст песни<br>3. Нажмите «Разобрать текст»<br>4. Ставьте метки кнопкой «МЕТКА» или Space<br>5. Кликните по таймкоду — правка',
+    undoTitle: "Отменить последнюю метку (Backspace)",
+    stampIdle: "⏱ МЕТКА · Space",
+    stampDone: "✓ Все слова отмечены",
+    exportTitle: "Экспорт LRC",
+    prevTitle: "Взять время у предыдущего слова / строки",
+    prev: "Пред",
+    playheadTitle: "Установить в текущую позицию трека",
+    playhead: "Сейчас",
+    nextTitle: "Взять время у следующего слова / строки",
+    next: "След",
+    ok: "OK",
+    lrcTitle: "Готовый LRC",
+    dlBtn: "⬇ Скачать .lrc",
+    copyBtn: "Копировать",
+    copyBtnDone: "✓ Скопировано",
+    closeBtn: "Закрыть",
+    counterDone: "готово",
+    noStamps: "Пока нет ни одной метки — нечего экспортировать.",
+    confirmClear: "Очистить текст песни и разбивку?\nВсе несохранённые метки будут потеряны."
+  }
+};
+
+let currentLang = "en";
+const t = (key) => I18N[currentLang][key] || key;
+
+function applyTranslations(lang){
+  currentLang = lang;
+  const dict = I18N[lang];
+  document.documentElement.setAttribute("lang", lang);
+
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if (dict[key] != null) el.textContent = dict[key];
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if (dict[key] != null) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (dict[key] != null) el.placeholder = dict[key];
+  });
+  document.querySelectorAll("[data-i18n-title]").forEach(el => {
+    const key = el.dataset.i18nTitle;
+    if (dict[key] != null) el.title = dict[key];
+  });
+
+  $("#trackName").textContent = state.file ? state.file.name : dict.noFile;
+
+  const stampBtn = $("#stampBtn");
+  if (state.flat.length && state.wordPointer >= state.flat.length){
+    stampBtn.textContent = dict.stampDone;
+  } else if (state.lines.length && state.mode === "line" && state.linePointer >= state.lines.length){
+    stampBtn.textContent = dict.stampDone;
+  } else {
+    stampBtn.textContent = dict.stampIdle;
+  }
+  const copyBtn = $("#copyBtn");
+  if (copyBtn.dataset.state !== "copied"){
+    copyBtn.textContent = dict.copyBtn;
+  }
+  const emptyEl = $("#emptyState");
+  if (emptyEl && !state.lines.length){
+    emptyEl.innerHTML = dict.empty;
+  }
+
+  // Обновляем title кнопки сворачивания под текущий язык и состояние
+  updateCollapseButton();
+
+  updateCounterText();
+}
+
+function updateCounterText(){
+  const el = $("#counter");
+  if (!state.lines.length){
+    el.textContent = "—";
+    return;
+  }
+  const doneWord = t("counterDone");
+  if (state.mode === "word"){
+    const done = state.flat.filter(w => w.start != null).length;
+    el.textContent = `${Math.min(state.wordPointer, state.flat.length)} / ${state.flat.length} · ${doneWord} ${done}`;
+  } else {
+    const done = state.lines.filter(l => l.time != null).length;
+    el.textContent = `${Math.min(state.linePointer, state.lines.length)} / ${state.lines.length} · ${doneWord} ${done}`;
+  }
+}
+
+function switchLanguage(){
+  if (document.documentElement.classList.contains("lang-anim")) return;
+  const next = currentLang === "en" ? "ru" : "en";
+  document.documentElement.classList.add("lang-anim");
+
+  setTimeout(() => {
+    applyTranslations(next);
+    localStorage.setItem("lrc-lang", next);
+    $("#langBtn").classList.toggle("active", next !== "en");
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove("lang-anim");
+    });
+  }, 230);
+}
+
+/* =============================================================
+   СВОРАЧИВАНИЕ ПАНЕЛИ ТЕКСТА
+   ============================================================= */
+function isLyricsCollapsed(){
+  return $("#lyricsPanel").classList.contains("collapsed");
+}
+
+function setLyricsCollapsed(collapsed){
+  const panel = $("#lyricsPanel");
+  panel.classList.toggle("collapsed", collapsed);
+  updateCollapseButton();
+  try { localStorage.setItem("lrc-lyrics-collapsed", collapsed ? "1" : "0"); } catch(e){}
+}
+
+function toggleLyrics(){
+  setLyricsCollapsed(!isLyricsCollapsed());
+}
+
+function updateCollapseButton(){
+  const panel = $("#lyricsPanel");
+  if (!panel) return;
+  const collapsed = panel.classList.contains("collapsed");
+  const btn = $("#collapseBtn");
+  btn.classList.toggle("collapsed", collapsed);
+  btn.title = collapsed ? t("expandTitle") : t("collapseTitle");
+}
+
+/* =============================================================
+   ОСНОВНАЯ ЛОГИКА
+   ============================================================= */
+const audio = new Audio();
+audio.preload = "auto";
+
+const state = {
+  file: null,
+  lines: [],
+  flat: [],
+  mode: "word",
+  linePointer: 0,
+  wordPointer: 0,
+  speed: 1,
+};
+
+const $ = s => document.querySelector(s);
+const stage = $("#stage");
+const tsEditor = $("#tsEditor");
+const tsInput = $("#tsInput");
+const tsBtnPrev = $("#tsCopyPrev");
+const tsBtnNext = $("#tsCopyNext");
+
+function fmt(time){
+  time = Math.max(0, time || 0);
+  const m = Math.floor(time / 60);
+  const s = time - m * 60;
+  let ss = s.toFixed(2);
+  if (ss === "60.00") return String(m + 1).padStart(2, "0") + ":00.00";
+  return String(m).padStart(2, "0") + ":" + ss.padStart(5, "0");
+}
+function parseTime(str){
+  if (!str) return null;
+  str = String(str).trim().replace(",", ".");
+  let m = str.match(/^(\d+):(\d+(?:\.\d+)?)$/);
+  if (m) return parseInt(m[1], 10) * 60 + parseFloat(m[2]);
+  let s = parseFloat(str);
+  if (!isNaN(s) && s >= 0) return s;
+  return null;
+}
+
+function scrollCurrentToCenter(el){
+  if (!el || !stage) return;
+  const stageRect = stage.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const offsetTop = (elRect.top - stageRect.top) + stage.scrollTop;
+  const target = offsetTop - (stage.clientHeight / 2) + (elRect.height / 2);
+  const maxScroll = stage.scrollHeight - stage.clientHeight;
+  const finalTop = Math.max(0, Math.min(maxScroll, target));
+  stage.scrollTo({ top: finalTop, behavior: "smooth" });
+}
+
+function parseLyrics(text){
+  const oldFlat = state.flat;
+  const oldLines = state.lines;
+
+  const newLines = text.split("\n")
+    .map(l => l.trim()).filter(Boolean)
+    .map(l => ({
+      time: null,
+      words: l.split(/\s+/).map(tk => ({ text: tk, start: null }))
+    }));
+
+  const newFlat = [];
+  for (const l of newLines) for (const w of l.words) newFlat.push(w);
+  newFlat.forEach((w, i) => {
+    const o = oldFlat[i];
+    if (o && o.text === w.text && o.start != null) w.start = o.start;
+  });
+  newLines.forEach((l, i) => {
+    const o = oldLines[i];
+    if (o && o.time != null && l.words.length === (o.words || []).length){
+      if (o.words[0] && l.words[0] && o.words[0].text === l.words[0].text){
+        l.time = o.time;
+      }
+    }
+  });
+
+  state.lines = newLines;
+  state.flat = newFlat;
+
+  state.linePointer = state.lines.findIndex(l => l.time == null);
+  if (state.linePointer === -1) state.linePointer = state.lines.length;
+  state.wordPointer = state.flat.findIndex(w => w.start == null);
+  if (state.wordPointer === -1) state.wordPointer = state.flat.length;
+
+  render();
+}
+
+function render(){
+  closeEditor();
+  document.documentElement.setAttribute("data-mode", state.mode);
+
+  if (!state.lines.length){
+    stage.innerHTML = '<div class="empty" id="emptyState"></div>';
+    $("#emptyState").innerHTML = t("empty");
+    $("#counter").textContent = "—";
+    $("#stampBtn").disabled = true;
+    $("#stampBtn").textContent = t("stampIdle");
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  let wordIdx = 0;
+
+  state.lines.forEach((line, li) => {
+    const lineEl = document.createElement("div");
+    lineEl.className = "line";
+    lineEl.dataset.lineIdx = li;
+
+    if (state.mode === "line" && li === state.linePointer) lineEl.classList.add("current");
+    if (line.time != null) lineEl.classList.add("stamped");
+
+    if (line.time != null){
+      const tk = document.createElement("span");
+      tk.className = "line-time";
+      tk.textContent = "[" + fmt(line.time) + "]";
+      tk.title = "Click to edit";
+      tk.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openEditor({type: "line", index: li}, lineEl);
+      });
+      lineEl.appendChild(tk);
+    }
+
+    line.words.forEach(w => {
+      const i = wordIdx;
+      const wEl = document.createElement("span");
+      wEl.className = "word";
+      wEl.dataset.wordIdx = i;
+
+      if (w.start != null) wEl.classList.add("stamped");
+      if (state.mode === "word" && i === state.wordPointer) wEl.classList.add("current");
+
+      const wt = document.createElement("span");
+      wt.className = "w-time";
+      if (w.start != null){
+        wt.textContent = fmt(w.start);
+        wt.title = "Click to edit";
+        wt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openEditor({type: "word", index: i}, wEl);
+        });
+      } else {
+        wt.classList.add("empty");
+        wt.textContent = "00:00.00";
+      }
+      wEl.appendChild(wt);
+
+      const txt = document.createElement("span");
+      txt.className = "w-text";
+      txt.textContent = w.text;
+      wEl.appendChild(txt);
+
+      wEl.addEventListener("click", (e) => {
+        if (e.target.classList.contains("w-time")) return;
+        if (e.shiftKey && state.flat[i].start != null){
+          audio.currentTime = state.flat[i].start;
+          return;
+        }
+        if (state.mode === "word") state.wordPointer = i;
+        else state.linePointer = li;
+        render();
+      });
+
+      lineEl.appendChild(wEl);
+      wordIdx++;
+    });
+
+    lineEl.addEventListener("click", (e) => {
+      if (e.target.closest(".word")) return;
+      if (state.mode === "line"){
+        state.linePointer = li;
+      } else {
+        let fi = -1;
+        let k = 0;
+        for (let j = 0; j < li; j++) k += state.lines[j].words.length;
+        for (let j = 0; j < line.words.length; j++){
+          if (line.words[j].start == null){ fi = k + j; break; }
+        }
+        if (fi === -1) fi = k;
+        state.wordPointer = fi;
+      }
+      render();
+    });
+
+    frag.appendChild(lineEl);
+  });
+
+  stage.innerHTML = "";
+  stage.appendChild(frag);
+
+  const stampBtn = $("#stampBtn");
+  if (state.mode === "word"){
+    stampBtn.disabled = state.wordPointer >= state.flat.length;
+  } else {
+    stampBtn.disabled = state.linePointer >= state.lines.length;
+  }
+  stampBtn.textContent = stampBtn.disabled ? t("stampDone") : t("stampIdle");
+
+  updateCounterText();
+
+  const cur = stage.querySelector(".word.current, .line.current");
+  if (cur){
+    requestAnimationFrame(() => {
+      scrollCurrentToCenter(cur);
+    });
+  }
+}
+
+function stamp(){
+  closeEditor();
+  if (state.mode === "word"){
+    if (state.wordPointer >= state.flat.length) return;
+    const tm = audio.currentTime || 0;
+    state.flat[state.wordPointer].start = tm;
+    const lineOfWord = findLineOfWord(state.wordPointer);
+    if (lineOfWord >= 0){
+      const fwi = firstWordIndex(lineOfWord);
+      if (state.wordPointer === fwi && state.lines[lineOfWord].time == null){
+        state.lines[lineOfWord].time = tm;
+      }
+    }
+    state.wordPointer++;
+  } else {
+    if (state.linePointer >= state.lines.length) return;
+    state.lines[state.linePointer].time = audio.currentTime || 0;
+    state.linePointer++;
+  }
+  render();
+  const btn = $("#stampBtn");
+  btn.classList.remove("hit");
+  void btn.offsetWidth;
+  btn.classList.add("hit");
+}
+function findLineOfWord(wordIdx){
+  let k = 0;
+  for (let i = 0; i < state.lines.length; i++){
+    const len = state.lines[i].words.length;
+    if (wordIdx < k + len) return i;
+    k += len;
+  }
+  return -1;
+}
+function firstWordIndex(lineIdx){
+  let k = 0;
+  for (let i = 0; i < lineIdx; i++) k += state.lines[i].words.length;
+  return k;
+}
+function undo(){
+  closeEditor();
+  if (state.mode === "word"){
+    if (state.wordPointer === 0) return;
+    state.wordPointer--;
+    const w = state.flat[state.wordPointer];
+    w.start = null;
+    const li = findLineOfWord(state.wordPointer);
+    if (li >= 0 && firstWordIndex(li) === state.wordPointer){
+      state.lines[li].time = null;
+    }
+  } else {
+    if (state.linePointer === 0) return;
+    state.linePointer--;
+    state.lines[state.linePointer].time = null;
+  }
+  render();
+}
+function clearAll(){
+  const hasText = $("#src").value.trim().length > 0;
+  const hasParsed = state.lines.length > 0;
+  if (!hasText && !hasParsed) return;
+  if (!confirm(t("confirmClear"))) return;
+
+  closeEditor();
+  $("#src").value = "";
+  localStorage.removeItem("lrc-src");
+  state.lines = [];
+  state.flat = [];
+  state.linePointer = 0;
+  state.wordPointer = 0;
+  render();
+  $("#src").focus();
+}
+
+function buildLRC(){
+  const out = [];
+  for (const line of state.lines){
+    if (!line.words.length) continue;
+    if (state.mode === "line"){
+      if (line.time == null) continue;
+      out.push(`[${fmt(line.time)}]${line.words.map(w => w.text).join(" ")}`);
+    } else {
+      const stamped = line.words.filter(w => w.start != null);
+      if (!stamped.length) continue;
+      const lineTime = line.words[0].start != null ? line.words[0].start : stamped[0].start;
+      let s = `[${fmt(lineTime)}]`;
+      for (const w of line.words){
+        if (w.start != null) s += `<${fmt(w.start)}>`;
+        s += w.text + " ";
+      }
+      out.push(s.trimEnd());
+    }
+  }
+  return out.join("\n");
+}
+
+function togglePlay(){
+  if (!audio.src) return;
+  if (audio.paused) audio.play().catch(()=>{});
+  else audio.pause();
+}
+function setSpeed(v){
+  state.speed = v;
+  audio.playbackRate = v;
+  audio.preservesPitch = false;
+  if ("mozPreservesPitch" in audio) audio.mozPreservesPitch = false;
+  if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
+  document.querySelectorAll('[data-speed]').forEach(b => {
+    b.classList.toggle("active", parseFloat(b.dataset.speed) === v);
+  });
+}
+function loadAudio(file){
+  if (audio.src) URL.revokeObjectURL(audio.src);
+  state.file = file;
+  audio.src = URL.createObjectURL(file);
+  audio.playbackRate = state.speed;
+  audio.preservesPitch = false;
+  if ("mozPreservesPitch" in audio) audio.mozPreservesPitch = false;
+  if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
+  $("#trackName").textContent = file.name;
+}
+
+const ICON_MOON = "M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z";
+const ICON_SUN  = "M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm-1-5v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM2 12c0 .55.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1H3c-.55 0-1 .45-1 1zm18 0c0 .55.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z";
+
+function applyTheme(th){
+  const html = document.documentElement;
+  html.classList.add("theme-anim");
+  void html.offsetWidth;
+  html.setAttribute("data-theme", th);
+  $("#themeIcon").innerHTML = `<path d="${th === "dark" ? ICON_MOON : ICON_SUN}"/>`;
+  localStorage.setItem("lrc-theme", th);
+  clearTimeout(applyTheme._t);
+  applyTheme._t = setTimeout(() => html.classList.remove("theme-anim"), 600);
+}
+
+/* ============ Плавающий редактор таймкода ============ */
+let editingTarget = null;
+
+function findNeighborValue(target, direction){
+  if (!target) return null;
+  if (target.type === "word"){
+    let i = target.index + direction;
+    while (i >= 0 && i < state.flat.length){
+      if (state.flat[i].start != null) return state.flat[i].start;
+      i += direction;
+    }
+  } else {
+    let i = target.index + direction;
+    while (i >= 0 && i < state.lines.length){
+      if (state.lines[i].time != null) return state.lines[i].time;
+      i += direction;
+    }
+  }
+  return null;
+}
+
+function openEditor(target, anchorEl){
+  if (!anchorEl) return;
+  applyEditorInput(false);
+  editingTarget = target;
+
+  const value = target.type === "word"
+    ? state.flat[target.index].start
+    : state.lines[target.index].time;
+  if (value == null) return;
+
+  tsInput.value = fmt(value);
+  tsInput.classList.remove("error");
+
+  tsBtnPrev.disabled = findNeighborValue(target, -1) == null;
+  tsBtnNext.disabled = findNeighborValue(target, +1) == null;
+
+  tsEditor.hidden = false;
+  positionEditor(anchorEl);
+  requestAnimationFrame(() => {
+    tsEditor.classList.add("show");
+    tsInput.focus();
+    tsInput.select();
+  });
+}
+
+function positionEditor(anchorEl){
+  const rect = anchorEl.getBoundingClientRect();
+  const edRect = tsEditor.getBoundingClientRect();
+  const halfW = edRect.width / 2;
+  let cx = rect.left + rect.width / 2;
+  cx = Math.max(halfW + 8, Math.min(window.innerWidth - halfW - 8, cx));
+
+  const placeAbove = rect.top > edRect.height + 20;
+  tsEditor.style.left = Math.round(cx) + "px";
+  tsEditor.style.top = Math.round(placeAbove ? rect.top - 8 : rect.bottom + 8) + "px";
+  tsEditor.classList.toggle("above", placeAbove);
+  tsEditor.classList.toggle("below", !placeAbove);
+}
+
+function applyEditorInput(showError){
+  if (!editingTarget) return;
+  const v = parseTime(tsInput.value);
+  if (v == null){
+    if (showError) tsInput.classList.add("error");
+    return;
+  }
+  tsInput.classList.remove("error");
+  if (editingTarget.type === "word"){
+    state.flat[editingTarget.index].start = Math.max(0, v);
+    updateWordTimestamp(editingTarget.index);
+  } else {
+    state.lines[editingTarget.index].time = Math.max(0, v);
+    updateLineTimestamp(editingTarget.index);
+  }
+}
+
+function nudge(deltaMs){
+  if (!editingTarget) return;
+  const delta = deltaMs / 1000;
+  const current = parseTime(tsInput.value);
+  const base = (current != null) ? current : 0;
+  tsInput.value = fmt(Math.max(0, base + delta));
+  tsInput.classList.remove("error");
+  applyEditorInput(false);
+}
+function copyFromNeighbor(direction){
+  if (!editingTarget) return;
+  const v = findNeighborValue(editingTarget, direction);
+  if (v == null) return;
+  tsInput.value = fmt(v);
+  tsInput.classList.remove("error");
+  applyEditorInput(false);
+}
+function bindToPlayhead(){
+  if (!editingTarget) return;
+  tsInput.value = fmt(audio.currentTime || 0);
+  tsInput.classList.remove("error");
+  applyEditorInput(false);
+}
+
+function closeEditor(){
+  if (!editingTarget){
+    if (!tsEditor.hidden){
+      tsEditor.classList.remove("show");
+      setTimeout(() => { if (!editingTarget) tsEditor.hidden = true; }, 200);
+    }
+    return;
+  }
+  applyEditorInput(false);
+  editingTarget = null;
+  tsEditor.classList.remove("show");
+  setTimeout(() => { if (!editingTarget) tsEditor.hidden = true; }, 200);
+}
+
+function updateWordTimestamp(wordIdx){
+  const el = stage.querySelector(`.word[data-word-idx="${wordIdx}"]`);
+  if (!el) return;
+  const wt = el.querySelector(".w-time");
+  if (!wt) return;
+  const time = state.flat[wordIdx].start;
+  if (time == null){
+    wt.textContent = "00:00.00";
+    wt.classList.add("empty");
+    el.classList.remove("stamped");
+  } else {
+    wt.textContent = fmt(time);
+    wt.classList.remove("empty");
+    el.classList.add("stamped");
+  }
+}
+function updateLineTimestamp(lineIdx){
+  const lineEl = stage.querySelector(`.line[data-line-idx="${lineIdx}"]`);
+  if (!lineEl) return;
+  const tm = state.lines[lineIdx].time;
+  let el = lineEl.querySelector(".line-time");
+  if (tm == null){
+    if (el) el.remove();
+    return;
+  }
+  if (!el){
+    el = document.createElement("span");
+    el.className = "line-time";
+    el.title = "Click to edit";
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openEditor({type: "line", index: lineIdx}, lineEl);
+    });
+    lineEl.insertBefore(el, lineEl.firstChild);
+  }
+  el.textContent = "[" + fmt(tm) + "]";
+}
+
+document.querySelectorAll(".ts-delta").forEach(b => {
+  b.addEventListener("click", () => {
+    nudge(parseFloat(b.dataset.delta));
+    tsInput.focus(); tsInput.select();
+  });
+});
+tsBtnPrev.addEventListener("click", () => copyFromNeighbor(-1));
+tsBtnNext.addEventListener("click", () => copyFromNeighbor(+1));
+$("#tsPlayhead").addEventListener("click", bindToPlayhead);
+$("#tsDone").addEventListener("click", () => closeEditor());
+tsInput.addEventListener("input", () => {
+  tsInput.classList.remove("error");
+  applyEditorInput(false);
+});
+tsInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter"){
+    e.preventDefault();
+    applyEditorInput(true);
+    if (!tsInput.classList.contains("error")) closeEditor();
+  } else if (e.key === "Escape"){
+    e.preventDefault();
+    closeEditor();
+  }
+});
+document.addEventListener("mousedown", (e) => {
+  if (!editingTarget) return;
+  if (tsEditor.contains(e.target)) return;
+  if (e.target.closest(".w-time") || e.target.closest(".line-time")) return;
+  closeEditor();
+}, true);
+stage.addEventListener("scroll", () => {
+  if (editingTarget) closeEditor();
+}, { passive: true });
+
+/* ============ UI события ============ */
+$("#openBtn").addEventListener("click", () => $("#file").click());
+$("#file").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if (f) loadAudio(f);
+});
+$("#playBtn").addEventListener("click", togglePlay);
+audio.addEventListener("play",  () => $("#playIcon").innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>');
+audio.addEventListener("pause", () => $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>');
+audio.addEventListener("ended", () => $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>');
+audio.addEventListener("loadedmetadata", () => {
+  $("#total").textContent = fmt(audio.duration || 0);
+});
+
+$("#backBtn").addEventListener("click", () => {
+  audio.currentTime = Math.max(0, (audio.currentTime || 0) - 3);
+});
+$("#fwdBtn").addEventListener("click", () => {
+  audio.currentTime = Math.min(audio.duration || 1e9, (audio.currentTime || 0) + 3);
+});
+
+document.querySelectorAll('[data-speed]').forEach(b => {
+  b.addEventListener("click", () => setSpeed(parseFloat(b.dataset.speed)));
+});
+document.querySelectorAll('[data-mode]').forEach(b => {
+  b.addEventListener("click", () => {
+    state.mode = b.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(x =>
+      x.classList.toggle("active", x.dataset.mode === state.mode));
+    render();
+  });
+});
+
+$("#stampBtn").addEventListener("click", stamp);
+$("#undoBtn").addEventListener("click", undo);
+$("#clearBtn").addEventListener("click", clearAll);
+$("#collapseBtn").addEventListener("click", toggleLyrics);
+
+$("#parseBtn").addEventListener("click", () => {
+  const txt = $("#src").value;
+  localStorage.setItem("lrc-src", txt);
+  parseLyrics(txt);
+});
+$("#src").addEventListener("input", () => {
+  localStorage.setItem("lrc-src", $("#src").value);
+});
+
+$("#exportBtn").addEventListener("click", () => {
+  const lrc = buildLRC();
+  if (!lrc){ alert(t("noStamps")); return; }
+  $("#out").value = lrc;
+  $("#overlay").classList.add("show");
+});
+$("#closeOverlay").addEventListener("click", () => $("#overlay").classList.remove("show"));
+$("#overlay").addEventListener("click", e => {
+  if (e.target === $("#overlay")) $("#overlay").classList.remove("show");
+});
+$("#copyBtn").addEventListener("click", async () => {
+  const btn = $("#copyBtn");
+  try {
+    await navigator.clipboard.writeText($("#out").value);
+    btn.dataset.state = "copied";
+    btn.textContent = t("copyBtnDone");
+    setTimeout(() => {
+      btn.dataset.state = "";
+      btn.textContent = t("copyBtn");
+    }, 1200);
+  } catch {
+    $("#out").select(); document.execCommand("copy");
+  }
+});
+$("#dlBtn").addEventListener("click", () => {
+  const blob = new Blob([$("#out").value], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = ($("#trackName").textContent.replace(/\.[^.]+$/, "") || "Syncora") + ".lrc";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$("#themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+$("#langBtn").addEventListener("click", switchLanguage);
+
+window.addEventListener("keydown", e => {
+  const tag = e.target.tagName;
+  if (tag === "TEXTAREA" || tag === "INPUT") return;
+  if ($("#overlay").classList.contains("show")){
+    if (e.code === "Escape") $("#overlay").classList.remove("show");
+    return;
+  }
+  if (e.code === "Escape" && editingTarget){ closeEditor(); return; }
+  switch (e.code){
+    case "Space":      e.preventDefault(); stamp(); break;
+    case "Backspace":  e.preventDefault(); undo();  break;
+    case "KeyP":       e.preventDefault(); togglePlay(); break;
+    case "ArrowLeft":  e.preventDefault();
+      audio.currentTime = Math.max(0, (audio.currentTime || 0) - 3); break;
+    case "ArrowRight": e.preventDefault();
+      audio.currentTime = Math.min(audio.duration || 1e9, (audio.currentTime || 0) + 3); break;
+  }
+});
+
+(function tick(){
+  $("#clock").textContent = fmt(audio.currentTime || 0);
+  requestAnimationFrame(tick);
+})();
+
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => {
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith("audio")) loadAudio(f);
+});
+
+/* ============ Init ============ */
+(function init(){
+  const savedTheme = localStorage.getItem("lrc-theme") || "dark";
+  document.documentElement.setAttribute("data-theme", savedTheme);
+  $("#themeIcon").innerHTML = `<path d="${savedTheme === "dark" ? ICON_MOON : ICON_SUN}"/>`;
+
+  const savedLang = localStorage.getItem("lrc-lang") || "en";
+  applyTranslations(savedLang);
+  $("#langBtn").classList.toggle("active", savedLang !== "en");
+
+  // Восстанавливаем состояние свёрнутости
+  const savedCollapsed = localStorage.getItem("lrc-lyrics-collapsed") === "1";
+  if (savedCollapsed){
+    $("#lyricsPanel").classList.add("collapsed");
+  }
+  updateCollapseButton();
+
+  const savedSrc = localStorage.getItem("lrc-src");
+  if (savedSrc){
+    $("#src").value = savedSrc;
+    parseLyrics(savedSrc);
+  }
+
+  setSpeed(1);
+})();
+</script>
+</body>
+</html>
