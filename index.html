@@ -1,8 +1,8 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
-  <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-W03CTC4QYV"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -12,14 +12,15 @@
   gtag('config', 'G-W03CTC4QYV');
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Syncora — LRC maker</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230B57D0'/%3E%3Cstop offset='1' stop-color='%2300315E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif' font-size='38' font-weight='800' fill='%23FFFFFF' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<title>Lyriq — LRC maker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230F4DB8'/%3E%3Cstop offset='1' stop-color='%23001E3C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='46' font-family='Roboto, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif' font-size='42' font-weight='900' fill='%23FFFFFF' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
 <style>
 :root{
   --r-xs: 8px; --r-sm: 12px; --r-md: 16px; --r-lg: 20px; --r-xl: 28px;
   --r-full: 999px;
   --theme-dur: .5s;
   --theme-curve: cubic-bezier(.4, 0, .2, 1);
+  --collapse-dur: .35s;
 }
 [data-theme="dark"]{
   --bg: #0F1218;
@@ -41,6 +42,8 @@
   --outline-var: #3E4756;
   --error: #FFB4AB;
   --shadow: 0 6px 20px rgba(0,0,0,.45);
+  --brand-grad-1: #0F4DB8;
+  --brand-grad-2: #001E3C;
 }
 [data-theme="light"]{
   --bg: #F6F9FE;
@@ -62,6 +65,8 @@
   --outline-var: #C4C6CF;
   --error: #BA1A1A;
   --shadow: 0 6px 20px rgba(11,87,208,.10);
+  --brand-grad-1: #0F4DB8;
+  --brand-grad-2: #001E3C;
 }
 *{box-sizing:border-box}
 html{height:100%}
@@ -76,7 +81,9 @@ body{
   overflow:hidden;
   transition: opacity .22s cubic-bezier(.4,0,.2,1);
 }
-html.lang-anim body{ opacity: .25; }
+html.lang-anim body{
+  opacity: .25;
+}
 html.theme-anim,
 html.theme-anim *,
 html.theme-anim *::before,
@@ -98,21 +105,128 @@ button{
 }
 button:disabled{opacity:.38;cursor:not-allowed}
 
+/* ============ HEADER ============ */
 header{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 16px;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 16px;
   background:var(--surface);
   border-bottom:1px solid var(--outline-var);
   flex:none;
 }
-header .brand{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-header .brand svg{width:22px;height:22px;fill:var(--primary);flex:none}
-header .brand .title{
-  font-size:17px;font-weight:600;letter-spacing:.2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-header .actions{display:flex;align-items:center;gap:4px;flex:none}
 
+/* ---- Бренд ---- */
+.brand{
+  display:flex;align-items:center;gap:10px;
+  min-width:0;
+  flex:none;
+  cursor:default;
+  user-select:none;
+}
+
+.brand-logo{
+  position:relative;
+  width:36px;height:36px;
+  flex:none;
+}
+
+.brand-icon{
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  background:linear-gradient(135deg, var(--brand-grad-1), var(--brand-grad-2));
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  box-shadow:
+    0 3px 10px rgba(15, 77, 184, .40),
+    0 0 0 0 rgba(168, 199, 250, 0);
+  transition: box-shadow .35s ease, transform .25s ease;
+  z-index:1;
+}
+
+/* Стеклянный блик */
+.brand-icon::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(160deg, rgba(255,255,255,.24), transparent 48%);
+  pointer-events:none;
+}
+
+.brand-letter{
+  color:#FFFFFF;
+  font: 900 20px/1 "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  letter-spacing:-.5px;
+  position:relative;
+  z-index:2;
+  margin-top:-1px;
+}
+
+/* Hover: лёгкий подъём и чуть больше тени — без пульсации */
+.brand:hover .brand-icon{
+  transform: translateY(-1px);
+  box-shadow:
+    0 5px 16px rgba(15, 77, 184, .50),
+    0 0 22px rgba(168, 199, 250, .18);
+}
+
+/* Воспроизведение: очень медленное «дыхание» свечения */
+.brand-icon.playing{
+  animation: brandBreathing 4.5s ease-in-out infinite;
+}
+@keyframes brandBreathing{
+  0%, 100%{
+    box-shadow:
+      0 3px 12px rgba(15, 77, 184, .42),
+      0 0 14px rgba(168, 199, 250, .16);
+  }
+  50%{
+    box-shadow:
+      0 4px 16px rgba(15, 77, 184, .58),
+      0 0 22px rgba(168, 199, 250, .30);
+  }
+}
+
+/* ---- Название ---- */
+.brand-title{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.4px;
+  color:var(--on-surface);
+  white-space:nowrap;
+  line-height:1;
+}
+
+/* ---- Кнопки справа ---- */
+header .actions{
+  display:flex;align-items:center;gap:4px;
+  flex:none;
+  margin-left:auto;
+}
+
+/* ---- Общие кнопки ---- */
+.btn-icon{
+  width:36px;height:36px;border-radius:var(--r-full);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--on-surface-var);
+  transition:background-color .18s ease, color .18s ease;
+  flex:none;
+}
+.btn-icon:hover:not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent);color:var(--on-surface)}
+.btn-icon:active:not(:disabled){background:color-mix(in srgb,var(--on-surface) 14%,transparent)}
+.btn-icon svg{width:20px;height:20px;fill:currentColor}
+.btn-icon.primary{color:var(--on-primary);background:var(--primary)}
+.btn-icon.primary:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 85%,var(--on-primary));color:var(--on-primary)}
+.btn-icon.subtle{width:32px;height:32px;color:var(--on-surface-var);opacity:.85}
+.btn-icon.subtle svg{width:18px;height:18px}
+.btn-icon.subtle:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);opacity:1}
+
+#collapseBtn svg{ transition: transform .3s cubic-bezier(.4,0,.2,1); }
+
+#langBtn.active{
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+/* ---- MAIN ---- */
 main{
   flex:1;
   min-height:0;
@@ -131,35 +245,6 @@ main{
 .toolbar .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .toolbar .row.player-row{gap:4px}
 .toolbar .sep-vert{width:1px;height:22px;background:var(--outline-var);margin:0 4px;flex:none}
-
-.btn-icon{
-  width:36px;height:36px;border-radius:var(--r-full);
-  display:inline-flex;align-items:center;justify-content:center;
-  color:var(--on-surface-var);
-  transition:background-color .18s ease, color .18s ease;
-  flex:none;
-}
-.btn-icon:hover:not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent);color:var(--on-surface)}
-.btn-icon:active:not(:disabled){background:color-mix(in srgb,var(--on-surface) 14%,transparent)}
-.btn-icon svg{width:20px;height:20px;fill:currentColor}
-.btn-icon.primary{color:var(--on-primary);background:var(--primary)}
-.btn-icon.primary:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 85%,var(--on-primary));color:var(--on-primary)}
-.btn-icon.subtle{width:32px;height:32px;color:var(--on-surface-var);opacity:.85}
-.btn-icon.subtle svg{width:18px;height:18px}
-.btn-icon.subtle:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);opacity:1}
-
-#langBtn.active{
-  color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 12%, transparent);
-}
-
-/* Иконка кнопки сворачивания — плавный поворот */
-#collapseBtn svg{
-  transition: transform .3s cubic-bezier(.4,0,.2,1);
-}
-#collapseBtn.collapsed svg{
-  transform: rotate(180deg);
-}
 
 .btn-small{
   height:36px;padding:0 14px;border-radius:var(--r-full);
@@ -201,43 +286,38 @@ main{
 .chip.active{background:var(--secondary-c);color:var(--on-secondary-c);border-color:transparent;padding-left:9px}
 .chip.active::before{content:"✓";font-size:12px;margin-right:3px}
 
-/* ============ Панель текста песни ============ */
 .lyrics-panel{
   flex:none;background:var(--surface-c-low);
   border-radius:var(--r-md);padding:10px;
-  display:flex;flex-direction:column;gap:0;
+  display:flex;flex-direction:column;gap:8px;
+  transition: background-color .3s ease, padding .3s ease;
 }
-.lyrics-panel .head{
-  display:flex;align-items:center;gap:8px;min-height:32px;
-}
+.lyrics-panel .head{display:flex;align-items:center;gap:8px;min-height:32px}
 .lyrics-panel .head .label{
   font-size:12px;color:var(--on-surface-var);font-weight:600;
   letter-spacing:.4px;text-transform:uppercase;flex:none;
 }
 .lyrics-panel .head .spacer{flex:1;min-width:8px}
 
-/* Обёртка анимируемого тела панели */
-.lyrics-body{
+.lyrics-panel .body-wrap{
   display:grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows .35s cubic-bezier(.4,0,.2,1);
-  margin-top: 8px;
+  transition: grid-template-rows var(--collapse-dur) cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
 }
-.lyrics-panel.collapsed .lyrics-body{
+.lyrics-panel .body-inner{
+  min-height:0;
+  display:flex;flex-direction:column;gap:8px;
+  overflow:hidden;
+  opacity:1;
+  transition: opacity .25s ease .08s;
+}
+.lyrics-panel.collapsed .body-wrap{
   grid-template-rows: 0fr;
-  margin-top: 0;
 }
-.lyrics-body-inner{
-  overflow: hidden;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  /* Внутренние элементы могут сжиматься, но анимация высоты идёт по .lyrics-body */
-}
-.lyrics-panel.collapsed .lyrics-body-inner{
-  /* Пока идёт анимация, оставляем невидимым — но только на время анимации
-     ничего не делаем, чтобы не мешать transition */
+.lyrics-panel.collapsed .body-inner{
+  opacity:0;
+  transition: opacity .15s ease;
 }
 
 .lyrics-panel .hint-row{padding:0 2px}
@@ -260,7 +340,6 @@ kbd{
   font:11px ui-monospace,monospace;color:var(--on-surface);
 }
 
-/* ===== ОБЁРТКА СЦЕНЫ ===== */
 .stage-wrap{
   flex:1;
   min-height:0;
@@ -268,6 +347,7 @@ kbd{
   border-radius:var(--r-md);
   position:relative;
   overflow:hidden;
+  transition: background-color .3s ease, border-radius .3s ease;
 }
 .stage{
   position:absolute;
@@ -493,11 +573,14 @@ footer .counter{
 ::-webkit-scrollbar-thumb:hover{background:var(--outline);background-clip:content-box}
 
 @media (max-width: 560px){
-  main{ padding: 8px; gap: 8px; }
-  header{ padding: 6px 12px; gap: 8px; }
-  header .brand svg{ width: 20px; height: 20px; }
-  header .brand .title{ font-size: 16px; }
+  header{ padding: 8px 12px; gap: 10px; }
+  .brand-logo{ width: 32px; height: 32px; }
+  .brand-icon{ border-radius: 10px; }
+  .brand-letter{ font-size: 18px; }
+  .brand-title{ font-size: 18px; letter-spacing: -.3px; }
   header .actions{ gap: 2px; }
+
+  main{ padding: 8px; gap: 8px; }
 
   .toolbar{ padding: 6px 8px; gap: 6px; border-radius: 12px; }
   .toolbar .row{ gap: 6px; }
@@ -515,7 +598,7 @@ footer .counter{
   .chip.active{ padding-left: 8px; }
   .chip-label{ font-size: 11.5px; }
 
-  .lyrics-panel{ padding: 8px; border-radius: 12px; }
+  .lyrics-panel{ padding: 8px; gap: 6px; border-radius: 12px; }
   .lyrics-panel .head{ min-height: 28px; gap: 6px; }
   .lyrics-panel .head .label{ font-size: 11px; }
   .lyrics-panel .hint{ font-size: 10.5px; line-height: 1.6; }
@@ -553,6 +636,7 @@ footer .counter{
 
 @media (max-width: 400px){
   .filename{ max-width: 60px; }
+  .brand-title{ font-size: 17px; }
 }
 </style>
 </head>
@@ -560,9 +644,14 @@ footer .counter{
 
 <header>
   <div class="brand">
-    <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
-    <span class="title">Syncora</span>
+    <span class="brand-logo">
+      <span class="brand-icon" id="brandIcon">
+        <span class="brand-letter">L</span>
+      </span>
+    </span>
+    <span class="brand-title">Lyriq</span>
   </div>
+
   <div class="actions">
     <button class="btn-icon" id="langBtn" title="Switch to Russian"
             data-i18n-title="langTitle">
@@ -623,8 +712,8 @@ footer .counter{
       <span class="label" data-i18n="lyricsLabel">LYRICS</span>
       <button class="btn-small ghost" id="parseBtn" data-i18n="parseBtn">Parse text</button>
       <span class="spacer"></span>
-      <button class="btn-icon subtle" id="collapseBtn" title="Collapse lyrics">
-        <svg viewBox="0 0 24 24"><path d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+      <button class="btn-icon subtle" id="collapseBtn" aria-label="Collapse">
+        <svg id="collapseIcon" viewBox="0 0 24 24"></svg>
       </button>
       <button class="btn-icon subtle" id="clearBtn"
               data-i18n-title="clearTitle" title="Clear text and word split"
@@ -633,9 +722,8 @@ footer .counter{
       </button>
     </div>
 
-    <!-- Обёртка с анимацией высоты -->
-    <div class="lyrics-body">
-      <div class="lyrics-body-inner">
+    <div class="body-wrap">
+      <div class="body-inner">
         <div class="hint-row">
           <span class="hint" id="hintText" data-i18n-html="hint"></span>
         </div>
@@ -709,9 +797,6 @@ Each line = one LRC line."></textarea>
 <script>
 "use strict";
 
-/* =============================================================
-   ЛОКАЛИЗАЦИЯ
-   ============================================================= */
 const I18N = {
   en: {
     langTitle: "Switch to Russian",
@@ -728,8 +813,8 @@ const I18N = {
     lyricsLabel: "LYRICS",
     parseBtn: "Parse text",
     clearTitle: "Clear text and word split",
-    collapseTitle: "Collapse lyrics",
-    expandTitle: "Expand lyrics",
+    collapseTitle: "Collapse lyrics block",
+    expandTitle: "Expand lyrics block",
     hint: '<kbd>Space</kbd> stamp · <kbd>Backspace</kbd> undo · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3s · <kbd>Shift</kbd>+click seek · click timestamp — edit',
     srcPlaceholder: "Paste the lyrics here.\nEach line = one LRC line.",
     empty: '1. Open an audio file<br>2. Paste the ready lyrics<br>3. Click "Parse text"<br>4. Press "STAMP" or Space to set timestamps<br>5. Click a word\'s timestamp to edit it manually',
@@ -768,8 +853,8 @@ const I18N = {
     lyricsLabel: "ТЕКСТ ПЕСНИ",
     parseBtn: "Разобрать текст",
     clearTitle: "Очистить текст и разбивку",
-    collapseTitle: "Свернуть текст",
-    expandTitle: "Развернуть текст",
+    collapseTitle: "Свернуть блок текста",
+    expandTitle: "Развернуть блок текста",
     hint: '<kbd>Space</kbd> метка · <kbd>Backspace</kbd> отменить · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3с · <kbd>Shift</kbd>+клик перейти · клик по таймкоду — правка',
     srcPlaceholder: "Вставьте сюда текст песни.\nКаждая строка = одна строка LRC.",
     empty: '1. Откройте аудиофайл<br>2. Вставьте готовый текст песни<br>3. Нажмите «Разобрать текст»<br>4. Ставьте метки кнопкой «МЕТКА» или Space<br>5. Кликните по таймкоду — правка',
@@ -838,11 +923,16 @@ function applyTranslations(lang){
   if (emptyEl && !state.lines.length){
     emptyEl.innerHTML = dict.empty;
   }
-
-  // Обновляем title кнопки сворачивания под текущий язык и состояние
-  updateCollapseButton();
-
+  updateCollapseBtnTitle();
   updateCounterText();
+}
+
+function updateCollapseBtnTitle(){
+  const panel = document.getElementById("lyricsPanel");
+  const btn = document.getElementById("collapseBtn");
+  if (!panel || !btn) return;
+  const collapsed = panel.classList.contains("collapsed");
+  btn.title = collapsed ? t("expandTitle") : t("collapseTitle");
 }
 
 function updateCounterText(){
@@ -876,36 +966,27 @@ function switchLanguage(){
   }, 230);
 }
 
-/* =============================================================
-   СВОРАЧИВАНИЕ ПАНЕЛИ ТЕКСТА
-   ============================================================= */
-function isLyricsCollapsed(){
-  return $("#lyricsPanel").classList.contains("collapsed");
-}
+const ICON_CHEVRON_UP = "M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z";
+const ICON_CHEVRON_DOWN = "M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z";
 
 function setLyricsCollapsed(collapsed){
-  const panel = $("#lyricsPanel");
+  const panel = document.getElementById("lyricsPanel");
+  const icon = document.getElementById("collapseIcon");
+  if (!panel || !icon) return;
+
   panel.classList.toggle("collapsed", collapsed);
-  updateCollapseButton();
-  try { localStorage.setItem("lrc-lyrics-collapsed", collapsed ? "1" : "0"); } catch(e){}
+  icon.innerHTML = `<path d="${collapsed ? ICON_CHEVRON_DOWN : ICON_CHEVRON_UP}"/>`;
+  updateCollapseBtnTitle();
+
+  localStorage.setItem("lrc-collapsed", collapsed ? "1" : "0");
 }
 
-function toggleLyrics(){
-  setLyricsCollapsed(!isLyricsCollapsed());
-}
-
-function updateCollapseButton(){
-  const panel = $("#lyricsPanel");
+function toggleLyricsCollapsed(){
+  const panel = document.getElementById("lyricsPanel");
   if (!panel) return;
-  const collapsed = panel.classList.contains("collapsed");
-  const btn = $("#collapseBtn");
-  btn.classList.toggle("collapsed", collapsed);
-  btn.title = collapsed ? t("expandTitle") : t("collapseTitle");
+  setLyricsCollapsed(!panel.classList.contains("collapsed"));
 }
 
-/* =============================================================
-   ОСНОВНАЯ ЛОГИКА
-   ============================================================= */
 const audio = new Audio();
 audio.preload = "auto";
 
@@ -1249,7 +1330,6 @@ function applyTheme(th){
   applyTheme._t = setTimeout(() => html.classList.remove("theme-anim"), 600);
 }
 
-/* ============ Плавающий редактор таймкода ============ */
 let editingTarget = null;
 
 function findNeighborValue(target, direction){
@@ -1436,16 +1516,29 @@ stage.addEventListener("scroll", () => {
   if (editingTarget) closeEditor();
 }, { passive: true });
 
-/* ============ UI события ============ */
 $("#openBtn").addEventListener("click", () => $("#file").click());
 $("#file").addEventListener("change", e => {
   const f = e.target.files[0];
   if (f) loadAudio(f);
 });
 $("#playBtn").addEventListener("click", togglePlay);
-audio.addEventListener("play",  () => $("#playIcon").innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>');
-audio.addEventListener("pause", () => $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>');
-audio.addEventListener("ended", () => $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>');
+
+/* ---- Медленная пульсация логотипа при воспроизведении ---- */
+const brandIcon = document.getElementById("brandIcon");
+
+audio.addEventListener("play", () => {
+  $("#playIcon").innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  if (brandIcon) brandIcon.classList.add("playing");
+});
+audio.addEventListener("pause", () => {
+  $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if (brandIcon) brandIcon.classList.remove("playing");
+});
+audio.addEventListener("ended", () => {
+  $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if (brandIcon) brandIcon.classList.remove("playing");
+});
+
 audio.addEventListener("loadedmetadata", () => {
   $("#total").textContent = fmt(audio.duration || 0);
 });
@@ -1472,7 +1565,7 @@ document.querySelectorAll('[data-mode]').forEach(b => {
 $("#stampBtn").addEventListener("click", stamp);
 $("#undoBtn").addEventListener("click", undo);
 $("#clearBtn").addEventListener("click", clearAll);
-$("#collapseBtn").addEventListener("click", toggleLyrics);
+$("#collapseBtn").addEventListener("click", toggleLyricsCollapsed);
 
 $("#parseBtn").addEventListener("click", () => {
   const txt = $("#src").value;
@@ -1511,7 +1604,7 @@ $("#dlBtn").addEventListener("click", () => {
   const blob = new Blob([$("#out").value], {type:"text/plain;charset=utf-8"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = ($("#trackName").textContent.replace(/\.[^.]+$/, "") || "Syncora") + ".lrc";
+  a.download = ($("#trackName").textContent.replace(/\.[^.]+$/, "") || "Lyriq") + ".lrc";
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
@@ -1552,7 +1645,6 @@ document.addEventListener("drop", e => {
   if (f && f.type.startsWith("audio")) loadAudio(f);
 });
 
-/* ============ Init ============ */
 (function init(){
   const savedTheme = localStorage.getItem("lrc-theme") || "dark";
   document.documentElement.setAttribute("data-theme", savedTheme);
@@ -1562,12 +1654,8 @@ document.addEventListener("drop", e => {
   applyTranslations(savedLang);
   $("#langBtn").classList.toggle("active", savedLang !== "en");
 
-  // Восстанавливаем состояние свёрнутости
-  const savedCollapsed = localStorage.getItem("lrc-lyrics-collapsed") === "1";
-  if (savedCollapsed){
-    $("#lyricsPanel").classList.add("collapsed");
-  }
-  updateCollapseButton();
+  const savedCollapsed = localStorage.getItem("lrc-collapsed") === "1";
+  setLyricsCollapsed(savedCollapsed);
 
   const savedSrc = localStorage.getItem("lrc-src");
   if (savedSrc){
