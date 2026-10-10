@@ -1,8 +1,8 @@
-# Syncora — Word-by-Word LRC Maker
+# Lyriq — Word-by-Word LRC Maker
 
-**Syncora** is a free online tool for creating word-by-word synchronized LRC files with millisecond precision. Perfect for karaoke, lyric videos, and any project that needs word-level timed lyrics.
+**Lyriq** is a free online tool for creating word-by-word synchronized LRC files with millisecond precision. Perfect for karaoke, lyric videos, and any project that needs word-level timed lyrics.
 
-👉 **Try it live:** [https://lostdeins.github.io/Syncora/](https://lostdeins.github.io/Syncora/)
+👉 **Try it live:** [https://lostdeins.github.io/Lyriq/](https://lostdeins.github.io/Lyriq/)
 
 ## ✨ Features
 
@@ -17,7 +17,7 @@
 
 ## 🚀 Quick Start
 
-1. Open [Syncora](https://lostdeins.github.io/Syncora/).
+1. Open [Lyriq](https://lostdeins.github.io/Lyriq/).
 2. Load an audio file (click **Open** or drag & drop).
 3. Paste the lyrics and click **Parse text**.
 4. Set timestamps with the **STAMP** button or the **Space** key.
@@ -44,8 +44,8 @@
 Just download `index.html` and open it in any modern browser. That's it — no server, no installation required.
 
 ```bash
-git clone https://github.com/lostdeins/Syncora.git
-cd Syncora
+git clone https://github.com/lostdeins/Lyriq.git
+cd Lyriq
 # then open index.html in your browser
 ```
 
@@ -59,4 +59,4 @@ Contributions, issues, and feature requests are welcome. Feel free to open an is
 
 ---
 
-**Keywords:** LRC maker, word-by-word lyrics, lyric synchronization, karaoke maker, subtitle editor, LRC generator, timed lyrics, lyric video, sync lyrics, LRC editor, web audio, Material Design 3, Syncora.
+**Keywords:** LRC maker, word-by-word lyrics, lyric synchronization, karaoke maker, subtitle editor, LRC generator, timed lyrics, lyric video, sync lyrics, LRC editor, web audio, Material Design 3, Lyriq.
