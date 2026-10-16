@@ -8,7 +8,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-W03CTC4QYV');
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -80,10 +79,9 @@ body{
   display:flex;flex-direction:column;
   overflow:hidden;
   transition: opacity .22s cubic-bezier(.4,0,.2,1);
+  -webkit-tap-highlight-color: transparent;
 }
-html.lang-anim body{
-  opacity: .25;
-}
+html.lang-anim body{ opacity: .25; }
 html.theme-anim,
 html.theme-anim *,
 html.theme-anim *::before,
@@ -102,10 +100,17 @@ button{
   font:inherit;color:var(--on-surface);
   background:transparent;border:none;
   cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 button:disabled{opacity:.38;cursor:not-allowed}
+button:focus{ outline: none; }
+button:focus-visible{
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
 
-/* ============ HEADER ============ */
 header{
   display:flex;align-items:center;gap:12px;
   padding:10px 16px;
@@ -114,137 +119,260 @@ header{
   flex:none;
 }
 
-/* ---- Бренд ---- */
 .brand{
   display:flex;align-items:center;gap:10px;
-  min-width:0;
-  flex:none;
-  cursor:default;
-  user-select:none;
+  min-width:0;flex:none;cursor:default;user-select:none;
 }
-
 .brand-logo{
-  position:relative;
-  width:36px;height:36px;
-  flex:none;
+  position:relative;width:36px;height:36px;flex:none;
 }
-
 .brand-icon{
-  position:absolute;
-  inset:0;
-  border-radius:12px;
+  position:absolute;inset:0;border-radius:12px;
   background:linear-gradient(135deg, var(--brand-grad-1), var(--brand-grad-2));
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
-  box-shadow:
-    0 3px 10px rgba(15, 77, 184, .40),
-    0 0 0 0 rgba(168, 199, 250, 0);
+  box-shadow: 0 3px 10px rgba(15, 77, 184, .40);
   transition: box-shadow .35s ease, transform .25s ease;
   z-index:1;
 }
-
-/* Стеклянный блик */
 .brand-icon::after{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background:linear-gradient(160deg, rgba(255,255,255,.24), transparent 48%);
   pointer-events:none;
 }
-
 .brand-letter{
   color:#FFFFFF;
   font: 900 20px/1 "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  letter-spacing:-.5px;
-  position:relative;
-  z-index:2;
-  margin-top:-1px;
+  letter-spacing:-.5px;position:relative;z-index:2;margin-top:-1px;
 }
 
-/* Hover: лёгкий подъём и чуть больше тени — без пульсации */
 .brand:hover .brand-icon{
   transform: translateY(-1px);
   box-shadow:
-    0 5px 16px rgba(15, 77, 184, .50),
-    0 0 22px rgba(168, 199, 250, .18);
+    0 5px 18px rgba(15, 77, 184, .55),
+    0 0 28px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 
-/* Воспроизведение: очень медленное «дыхание» свечения */
 .brand-icon.playing{
-  animation: brandBreathing 4.5s ease-in-out infinite;
+  animation: brandPlayingSoft 2.4s ease-in-out infinite;
 }
-@keyframes brandBreathing{
+@keyframes brandPlayingSoft{
   0%, 100%{
     box-shadow:
-      0 3px 12px rgba(15, 77, 184, .42),
-      0 0 14px rgba(168, 199, 250, .16);
+      0 3px 10px rgba(15, 77, 184, .40),
+      0 0 8px color-mix(in srgb, var(--primary) 14%, transparent);
   }
   50%{
     box-shadow:
-      0 4px 16px rgba(15, 77, 184, .58),
-      0 0 22px rgba(168, 199, 250, .30);
+      0 4px 14px rgba(15, 77, 184, .55),
+      0 0 18px color-mix(in srgb, var(--primary) 34%, transparent);
   }
 }
 
-/* ---- Название ---- */
 .brand-title{
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:-.4px;
-  color:var(--on-surface);
-  white-space:nowrap;
-  line-height:1;
+  font-size:20px;font-weight:800;letter-spacing:-.4px;
+  color:var(--on-surface);white-space:nowrap;line-height:1;
 }
+header .actions{display:flex;align-items:center;gap:4px;flex:none;margin-left:auto}
 
-/* ---- Кнопки справа ---- */
-header .actions{
-  display:flex;align-items:center;gap:4px;
-  flex:none;
-  margin-left:auto;
-}
-
-/* ---- Общие кнопки ---- */
 .btn-icon{
   width:36px;height:36px;border-radius:var(--r-full);
   display:inline-flex;align-items:center;justify-content:center;
   color:var(--on-surface-var);
-  transition:background-color .18s ease, color .18s ease;
+  transition:background-color .2s ease, color .2s ease;
   flex:none;
 }
-.btn-icon:hover:not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent);color:var(--on-surface)}
-.btn-icon:active:not(:disabled){background:color-mix(in srgb,var(--on-surface) 14%,transparent)}
+.btn-icon:hover:not(:disabled){
+  background:color-mix(in srgb,var(--on-surface) 8%,transparent);
+  color:var(--on-surface);
+}
+.btn-icon:active:not(:disabled){
+  background:color-mix(in srgb,var(--on-surface) 14%,transparent);
+}
 .btn-icon svg{width:20px;height:20px;fill:currentColor}
 .btn-icon.primary{color:var(--on-primary);background:var(--primary)}
-.btn-icon.primary:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 85%,var(--on-primary));color:var(--on-primary)}
+.btn-icon.primary:hover:not(:disabled){
+  background:color-mix(in srgb,var(--primary) 85%,var(--on-primary));
+  color:var(--on-primary);
+}
 .btn-icon.subtle{width:32px;height:32px;color:var(--on-surface-var);opacity:.85}
 .btn-icon.subtle svg{width:18px;height:18px}
-.btn-icon.subtle:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary);opacity:1}
+.btn-icon.subtle:hover:not(:disabled){
+  background:color-mix(in srgb,var(--primary) 12%,transparent);
+  color:var(--primary);opacity:1;
+}
+.btn-icon.subtle:active:not(:disabled){
+  background:color-mix(in srgb,var(--primary) 20%,transparent);
+}
 
 #collapseBtn svg{ transition: transform .3s cubic-bezier(.4,0,.2,1); }
-
 #langBtn.active{
   color: var(--primary);
   background: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
-/* ---- MAIN ---- */
+#infoBtn{width:32px;height:32px;color:var(--on-surface-var);opacity:.85}
+#infoBtn svg{width:18px;height:18px}
+#infoBtn:hover{
+  background:color-mix(in srgb,var(--primary) 12%,transparent);
+  color:var(--primary);opacity:1;
+}
+#infoBtn:active{
+  background:color-mix(in srgb,var(--primary) 20%,transparent);
+}
+
+/* Кнопка горячих клавиш — subtle-иконка, при hover фирменный синий */
+#hotkeysBtn{
+  width: 32px; height: 32px;
+  color: var(--on-surface-var);
+  opacity: .85;
+}
+#hotkeysBtn svg{ width: 18px; height: 18px; }
+#hotkeysBtn:hover:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  opacity: 1;
+}
+#hotkeysBtn:active:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Кнопка импорта LRC — subtle-иконка, при hover фирменный синий */
+#importLrcBtn{
+  width: 32px; height: 32px;
+  color: var(--on-surface-var);
+  opacity: .85;
+}
+#importLrcBtn svg{ width: 18px; height: 18px; }
+#importLrcBtn:hover:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  opacity: 1;
+}
+#importLrcBtn:active:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+#clearFileBtn{
+  width: 26px; height: 26px;
+  margin-left: -4px;
+  color: var(--on-surface-var);
+  opacity: .75;
+  flex: none;
+}
+#clearFileBtn svg{ width: 16px; height: 16px; }
+#clearFileBtn:hover{
+  background: color-mix(in srgb, var(--error) 14%, transparent);
+  color: var(--error);
+  opacity: 1;
+}
+#clearFileBtn:active{
+  background: color-mix(in srgb, var(--error) 22%, transparent);
+}
+#clearFileBtn[hidden]{ display: none; }
+
+/* Кнопка сброса таймкодов — визуально как у undo, но при hover оттенок error */
+#resetStampsBtn{
+  color: var(--on-surface-var);
+  opacity: .85;
+}
+#resetStampsBtn svg{ width: 20px; height: 20px; }
+#resetStampsBtn:hover:not(:disabled){
+  background: color-mix(in srgb, var(--error) 14%, transparent);
+  color: var(--error);
+  opacity: 1;
+}
+#resetStampsBtn:active:not(:disabled){
+  background: color-mix(in srgb, var(--error) 22%, transparent);
+}
+
+/* Кнопки навигации указателя — subtle-иконки, hover фирменный синий */
+#prevPointerBtn,
+#nextPointerBtn{
+  color: var(--on-surface-var);
+  opacity: .85;
+}
+#prevPointerBtn svg,
+#nextPointerBtn svg{ width: 20px; height: 20px; }
+#prevPointerBtn:hover:not(:disabled),
+#nextPointerBtn:hover:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  opacity: 1;
+}
+#prevPointerBtn:active:not(:disabled),
+#nextPointerBtn:active:not(:disabled){
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Кнопка очистки текста и разбивки — деструктивная, красная подсветка при hover/active
+   (по специфичности ID-селектор перебивает .btn-icon.subtle:hover) */
+#clearBtn{
+  color: var(--on-surface-var);
+  opacity: .85;
+}
+#clearBtn svg{ width: 18px; height: 18px; }
+#clearBtn:hover:not(:disabled){
+  background: color-mix(in srgb, var(--error) 14%, transparent);
+  color: var(--error);
+  opacity: 1;
+}
+#clearBtn:active:not(:disabled){
+  background: color-mix(in srgb, var(--error) 22%, transparent);
+}
+
 main{
-  flex:1;
-  min-height:0;
-  padding:12px;
+  flex:1;min-height:0;padding:12px;
   display:flex;flex-direction:column;gap:10px;
   overflow:hidden;
 }
 
 .toolbar{
-  flex:none;
-  background:var(--surface-c-low);
-  border-radius:var(--r-md);
-  padding:8px 10px;
+  flex:none;background:var(--surface-c-low);
+  border-radius:var(--r-md);padding:8px 10px;
   display:flex;flex-direction:column;gap:8px;
 }
 .toolbar .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .toolbar .row.player-row{gap:4px}
 .toolbar .sep-vert{width:1px;height:22px;background:var(--outline-var);margin:0 4px;flex:none}
+
+.progress-row{padding:0 2px}
+#progressBar{
+  width:100%;height:16px;
+  -webkit-appearance:none;appearance:none;
+  background:transparent;cursor:pointer;outline:none;display:block;
+}
+#progressBar::-webkit-slider-runnable-track{
+  height:6px;
+  background:linear-gradient(to right,
+    var(--primary) 0%,
+    var(--primary) var(--progress, 0%),
+    var(--outline-var) var(--progress, 0%),
+    var(--outline-var) 100%);
+  border-radius:3px;
+}
+#progressBar::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:14px;height:14px;border-radius:50%;
+  background:var(--primary);
+  margin-top:-4px;
+  box-shadow: 0 0 0 2px var(--surface-c-low);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+#progressBar:hover::-webkit-slider-thumb{
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px var(--surface-c-low), 0 0 0 8px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+#progressBar::-moz-range-track{
+  height:6px;background:var(--outline-var);border-radius:3px;
+}
+#progressBar::-moz-range-progress{
+  height:6px;background:var(--primary);border-radius:3px;
+}
+#progressBar::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--primary);border:2px solid var(--surface-c-low);
+}
 
 .btn-small{
   height:36px;padding:0 14px;border-radius:var(--r-full);
@@ -255,20 +383,31 @@ main{
   flex:none;white-space:nowrap;
 }
 .btn-small:hover:not(:disabled){filter:brightness(1.08)}
+.btn-small:active:not(:disabled){filter:brightness(0.94)}
 .btn-small.ghost{background:transparent;color:var(--primary);border:1px solid var(--outline)}
-.btn-small.ghost:hover:not(:disabled){background:color-mix(in srgb,var(--primary) 8%,transparent)}
+.btn-small.ghost:hover:not(:disabled){
+  background:color-mix(in srgb,var(--primary) 8%,transparent);
+}
+.btn-small.ghost:active:not(:disabled){
+  background:color-mix(in srgb,var(--primary) 16%,transparent);
+}
 
 .filename{
   color:var(--on-surface-var);font-size:12.5px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   flex:1;min-width:60px;
 }
+.autosave-hint{
+  color: var(--primary);font-size:11px;font-weight:600;
+  opacity:0;transition: opacity .3s ease;
+  pointer-events: none;white-space: nowrap;flex:none;
+}
+.autosave-hint.show{ opacity: 1; }
 .time{
   font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size:12.5px;font-variant-numeric:tabular-nums;
   background:var(--surface-c);border-radius:var(--r-full);
-  padding:6px 12px;color:var(--primary);flex:none;
-  white-space:nowrap;
+  padding:6px 12px;color:var(--primary);flex:none;white-space:nowrap;
 }
 .time .sep{color:var(--on-surface-var);margin:0 4px}
 .time .total{color:var(--on-surface-var)}
@@ -279,11 +418,21 @@ main{
   border-radius:var(--r-full);border:1px solid var(--outline-var);
   color:var(--on-surface-var);font-size:12px;font-weight:500;
   background:transparent;
-  transition:background-color .18s ease, color .18s ease, border-color .18s ease, padding .18s ease;
+  transition:background-color .18s ease, color .18s ease, border-color .18s ease, padding .18s ease, filter .15s ease;
   white-space:nowrap;flex:none;
 }
-.chip:hover:not(.active):not(:disabled){background:color-mix(in srgb,var(--on-surface) 8%,transparent)}
-.chip.active{background:var(--secondary-c);color:var(--on-secondary-c);border-color:transparent;padding-left:9px}
+.chip:hover:not(.active):not(:disabled){
+  background:color-mix(in srgb,var(--on-surface) 8%,transparent);
+}
+.chip:active:not(.active):not(:disabled){
+  background:color-mix(in srgb,var(--on-surface) 14%,transparent);
+}
+.chip.active{
+  background:var(--secondary-c);color:var(--on-secondary-c);
+  border-color:transparent;padding-left:9px;
+}
+.chip.active:hover:not(:disabled){ filter: brightness(1.04); }
+.chip.active:active:not(:disabled){ filter: brightness(0.94); }
 .chip.active::before{content:"✓";font-size:12px;margin-right:3px}
 
 .lyrics-panel{
@@ -306,18 +455,13 @@ main{
   overflow:hidden;
 }
 .lyrics-panel .body-inner{
-  min-height:0;
-  display:flex;flex-direction:column;gap:8px;
-  overflow:hidden;
-  opacity:1;
+  min-height:0;display:flex;flex-direction:column;gap:8px;
+  overflow:hidden;opacity:1;
   transition: opacity .25s ease .08s;
 }
-.lyrics-panel.collapsed .body-wrap{
-  grid-template-rows: 0fr;
-}
+.lyrics-panel.collapsed .body-wrap{ grid-template-rows: 0fr; }
 .lyrics-panel.collapsed .body-inner{
-  opacity:0;
-  transition: opacity .15s ease;
+  opacity:0;transition: opacity .15s ease;
 }
 
 .lyrics-panel .hint-row{padding:0 2px}
@@ -341,19 +485,13 @@ kbd{
 }
 
 .stage-wrap{
-  flex:1;
-  min-height:0;
-  background:var(--surface-c-low);
-  border-radius:var(--r-md);
-  position:relative;
-  overflow:hidden;
+  flex:1;min-height:0;background:var(--surface-c-low);
+  border-radius:var(--r-md);position:relative;overflow:hidden;
   transition: background-color .3s ease, border-radius .3s ease;
 }
 .stage{
-  position:absolute;
-  inset:0;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
+  position:absolute;inset:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
   scroll-behavior:smooth;
   padding:24px 20px 40px;
   background:transparent;
@@ -378,6 +516,22 @@ kbd{
   font-variant-numeric:tabular-nums;cursor:text;
 }
 
+.line.empty-line{padding:6px 12px;min-height:36px}
+.line.empty-line .line-time{
+  cursor:pointer;padding:4px 8px;border-radius:6px;
+  background:color-mix(in srgb, var(--on-surface) 6%, transparent);
+  transition: background-color .15s ease;
+}
+.line.empty-line .line-time:hover{
+  background:color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--primary);
+}
+.line.empty-line::after{
+  content: "· · ·";color: var(--on-surface-var);
+  opacity: .4;font-size: 13px;letter-spacing: 4px;
+  margin-left: 8px;vertical-align: middle;
+}
+
 .word{
   display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;
   min-width:56px;padding:2px 6px 4px;margin:0 1px 4px;
@@ -392,9 +546,8 @@ kbd{
   font-size:10px;line-height:1.2;font-variant-numeric:tabular-nums;
   color:var(--on-surface-var);white-space:nowrap;
   padding:1px 4px;margin-bottom:2px;border-radius:5px;
-  cursor:text;
+  cursor:text;opacity:.85;
   transition:background-color .15s ease, color .15s ease, opacity .15s ease;
-  opacity:.85;
 }
 .word .w-time.empty{color:transparent;pointer-events:none}
 .word .w-time:not(.empty):hover{
@@ -409,6 +562,7 @@ kbd{
 .word.current{
   background:var(--primary);
   box-shadow:0 3px 12px color-mix(in srgb,var(--primary) 45%,transparent);
+  transition: background-color .3s ease, box-shadow .3s ease;
 }
 .word.current .w-text{color:var(--on-primary);font-weight:700}
 .word.current .w-time{color:var(--on-primary);opacity:1;font-weight:700}
@@ -421,6 +575,7 @@ kbd{
 [data-mode="line"] .word .w-text{display:inline}
 [data-mode="line"] .line-time{display:inline-block}
 [data-mode="word"] .line-time{display:none}
+[data-mode="word"] .line.empty-line .line-time{display:inline-block}
 
 footer{
   flex:none;background:var(--surface);border-top:1px solid var(--outline-var);
@@ -447,6 +602,23 @@ footer .counter{
   100%{transform:scale(1);box-shadow:0 0 0 14px color-mix(in srgb,var(--primary) 0%,transparent)}
 }
 
+#instrumentalBtn{
+  width:52px;height:52px;border-radius:var(--r-full);
+  background:var(--secondary-c);color:var(--on-secondary-c);
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:none;
+  transition:background-color .18s ease, transform .1s ease, filter .15s ease;
+}
+#instrumentalBtn svg{width:22px;height:22px;fill:currentColor}
+#instrumentalBtn:hover{filter:brightness(1.08)}
+#instrumentalBtn:active{transform:scale(.96)}
+#instrumentalBtn.flash{ animation: instrumentalFlash .4s ease-out; }
+@keyframes instrumentalFlash{
+  0%{transform:scale(1);}
+  40%{transform:scale(1.15);box-shadow:0 0 0 8px color-mix(in srgb,var(--primary) 25%,transparent);}
+  100%{transform:scale(1);box-shadow:0 0 0 16px color-mix(in srgb,var(--primary) 0%,transparent);}
+}
+
 .ts-editor{
   position:fixed;z-index:200;
   display:flex;flex-direction:column;gap:8px;
@@ -454,8 +626,7 @@ footer .counter{
   background:var(--tertiary-c);color:var(--on-tertiary-c);
   border-radius:var(--r-lg);
   box-shadow:0 8px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06) inset;
-  width:320px;
-  opacity:0;pointer-events:none;
+  width:320px;opacity:0;pointer-events:none;
   transition:opacity .18s ease;
 }
 .ts-editor.show{opacity:1;pointer-events:auto}
@@ -464,8 +635,7 @@ footer .counter{
 .ts-editor::after{
   content:"";position:absolute;left:50%;
   width:12px;height:12px;background:var(--tertiary-c);
-  transform:translateX(-50%) rotate(45deg);
-  pointer-events:none;
+  transform:translateX(-50%) rotate(45deg);pointer-events:none;
 }
 .ts-editor.above::after{bottom:-6px}
 .ts-editor.below::after{top:-6px}
@@ -477,10 +647,7 @@ footer .counter{
   font-weight:700;font-size:15px;line-height:1.05;
   transition:filter .15s, transform .1s;
 }
-.ts-delta small{
-  font-size:9.5px;font-weight:500;opacity:.75;
-  letter-spacing:.6px;margin-top:3px;
-}
+.ts-delta small{font-size:9.5px;font-weight:500;opacity:.75;letter-spacing:.6px;margin-top:3px}
 .ts-delta:hover{filter:brightness(1.08)}
 .ts-delta:active{transform:scale(.95)}
 .ts-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
@@ -537,6 +704,89 @@ footer .counter{
 .overlay.show .dialog{transform:translateY(0) scale(1);opacity:1}
 .dialog h3{margin:0;font-size:19px;font-weight:500}
 .dialog .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+.info-dialog{width:min(480px,100%);max-height:none;gap:18px}
+.info-section{display:flex;flex-direction:column;gap:10px}
+.info-section-head{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;color:var(--on-surface-var);
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.info-section-head svg{width:18px;height:18px;fill:var(--primary);flex:none}
+.format-chips{display:flex;flex-wrap:wrap;gap:6px}
+.format-chip{
+  display:inline-flex;align-items:center;height:30px;padding:0 14px;
+  border-radius:var(--r-full);background:var(--secondary-c);
+  color:var(--on-secondary-c);font-size:12.5px;font-weight:600;letter-spacing:.3px;
+}
+.info-note{
+  font-size:12.5px;color:var(--on-surface-var);line-height:1.65;
+  padding:12px 14px;border-radius:var(--r-sm);
+  background:color-mix(in srgb,var(--primary) 8%,transparent);
+  border-left:3px solid var(--primary);
+}
+
+/* Список горячих клавиш — в стиле info-dialog, разделён на секции */
+.hotkeys-list{
+  display:flex;flex-direction:column;gap:6px;
+}
+.hotkey-row{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 12px;border-radius:var(--r-sm);
+  background:color-mix(in srgb,var(--on-surface) 4%,transparent);
+  transition:background-color .15s ease;
+}
+.hotkey-row:hover{
+  background:color-mix(in srgb,var(--on-surface) 7%,transparent);
+}
+.hotkey-keys{
+  flex:none;min-width:120px;
+  display:flex;align-items:center;gap:4px;
+  flex-wrap:wrap;
+}
+.hotkey-keys .sep{
+  color:var(--on-surface-var);font-size:11px;
+  padding:0 1px;
+}
+.hotkey-desc{
+  font-size:13.5px;color:var(--on-surface);line-height:1.4;
+}
+
+#modalOverlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;z-index:300;backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+}
+#modalOverlay.show{opacity:1;pointer-events:auto}
+.modal-dialog{
+  background:var(--surface-c);border-radius:var(--r-xl);
+  width:min(420px,100%);
+  display:flex;flex-direction:column;
+  padding:24px;gap:14px;
+  box-shadow:var(--shadow);
+  transform:translateY(8px) scale(.97);opacity:0;
+  transition:transform .3s cubic-bezier(.2,0,0,1), opacity .25s ease;
+}
+#modalOverlay.show .modal-dialog{transform:translateY(0) scale(1);opacity:1}
+.modal-dialog h3{margin:0;font-size:19px;font-weight:500;color:var(--on-surface)}
+.modal-message{
+  margin:0;color:var(--on-surface-var);font-size:14.5px;line-height:1.6;
+  white-space:pre-line;
+}
+.modal-actions{
+  display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px;
+}
+.modal-btn{
+  padding:10px 20px;border-radius:var(--r-full);
+  font-size:14px;font-weight:600;
+  transition:filter .15s, background-color .18s;
+}
+.modal-btn.cancel{background:transparent;color:var(--primary)}
+.modal-btn.cancel:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
+.modal-btn.confirm{background:var(--primary);color:var(--on-primary)}
+.modal-btn.confirm:hover{filter:brightness(1.08)}
+
 #out{
   flex:1;min-height:280px;resize:vertical;
   background:var(--surface-c-low);color:var(--on-surface);
@@ -545,31 +795,19 @@ footer .counter{
   font:13px/1.65 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   white-space:pre;overflow:auto;outline:none;
 }
-.btn-filled{
-  background:var(--primary);color:var(--on-primary);
-  border-radius:var(--r-full);padding:10px 22px;
-  font-weight:600;font-size:14px;
-}
+.btn-filled{background:var(--primary);color:var(--on-primary);border-radius:var(--r-full);padding:10px 22px;font-weight:600;font-size:14px}
 .btn-filled:hover{filter:brightness(1.08)}
-.btn-tonal{
-  background:var(--secondary-c);color:var(--on-secondary-c);
-  border-radius:var(--r-full);padding:10px 18px;
-  font-weight:500;font-size:14px;
-}
+.btn-filled:active{filter:brightness(0.94)}
+.btn-tonal{background:var(--secondary-c);color:var(--on-secondary-c);border-radius:var(--r-full);padding:10px 18px;font-weight:500;font-size:14px}
 .btn-tonal:hover{filter:brightness(1.06)}
-.btn-outline{
-  background:transparent;color:var(--primary);
-  border:1px solid var(--outline);border-radius:var(--r-full);
-  padding:10px 18px;font-weight:500;font-size:14px;
-}
+.btn-tonal:active{filter:brightness(0.94)}
+.btn-outline{background:transparent;color:var(--primary);border:1px solid var(--outline);border-radius:var(--r-full);padding:10px 18px;font-weight:500;font-size:14px}
 .btn-outline:hover{background:color-mix(in srgb,var(--primary) 8%,transparent)}
+.btn-outline:active{background:color-mix(in srgb,var(--primary) 16%,transparent)}
 
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{
-  background:var(--outline-var);border-radius:5px;
-  border:2px solid transparent;background-clip:content-box;
-}
+::-webkit-scrollbar-thumb{background:var(--outline-var);border-radius:5px;border:2px solid transparent;background-clip:content-box}
 ::-webkit-scrollbar-thumb:hover{background:var(--outline);background-clip:content-box}
 
 @media (max-width: 560px){
@@ -591,8 +829,23 @@ footer .counter{
   .btn-icon svg{ width: 18px; height: 18px; }
   .btn-icon.subtle{ width: 30px; height: 30px; }
   .btn-icon.subtle svg{ width: 16px; height: 16px; }
+  #infoBtn{ width: 30px; height: 30px; }
+  #infoBtn svg{ width: 16px; height: 16px; }
+  #hotkeysBtn{ width: 30px; height: 30px; }
+  #hotkeysBtn svg{ width: 16px; height: 16px; }
+  #importLrcBtn{ width: 30px; height: 30px; }
+  #importLrcBtn svg{ width: 16px; height: 16px; }
+  #clearFileBtn{ width: 24px; height: 24px; margin-left: -3px; }
+  #clearFileBtn svg{ width: 14px; height: 14px; }
+  #resetStampsBtn{ width: 34px; height: 34px; }
+  #resetStampsBtn svg{ width: 18px; height: 18px; }
+  #prevPointerBtn, #nextPointerBtn{ width: 34px; height: 34px; }
+  #prevPointerBtn svg, #nextPointerBtn svg{ width: 18px; height: 18px; }
+  #clearBtn{ width: 30px; height: 30px; }
+  #clearBtn svg{ width: 16px; height: 16px; }
   .btn-small{ height: 34px; padding: 0 12px; font-size: 12px; gap: 4px; }
   .filename{ font-size: 11px; min-width: 40px; }
+  .autosave-hint{ font-size: 10px; }
   .time{ font-size: 11.5px; padding: 5px 9px; }
   .chip{ height: 28px; padding: 0 10px; font-size: 11.5px; }
   .chip.active{ padding-left: 8px; }
@@ -603,11 +856,8 @@ footer .counter{
   .lyrics-panel .head .label{ font-size: 11px; }
   .lyrics-panel .hint{ font-size: 10.5px; line-height: 1.6; }
   #src{
-    min-height: 70px;
-    max-height: 25vh;
-    padding: 8px 10px;
-    font-size: 12.5px;
-    line-height: 1.55;
+    min-height: 70px;max-height: 25vh;
+    padding: 8px 10px;font-size: 12.5px;line-height: 1.55;
     border-radius: 10px;
   }
 
@@ -621,6 +871,8 @@ footer .counter{
 
   footer{ padding: 6px 10px; gap: 6px; }
   #stampBtn{ height: 46px; font-size: 13px; letter-spacing: .2px; gap: 6px; }
+  #instrumentalBtn{ width: 46px; height: 46px; }
+  #instrumentalBtn svg{ width: 20px; height: 20px; }
   footer .counter{ font-size: 11px; }
 
   kbd{ font-size: 10px; padding: 0 4px; }
@@ -632,11 +884,30 @@ footer .counter{
   .ts-action svg{ width: 12px; height: 12px; }
   .ts-input{ font-size: 15px; padding: 9px 10px; }
   .ts-done{ padding: 0 14px; font-size: 12px; }
+
+  .info-dialog{ padding: 18px; gap: 14px; }
+  .info-dialog h3{ font-size: 17px; }
+  .format-chip{ height: 28px; padding: 0 12px; font-size: 12px; }
+  .info-note{ font-size: 12px; padding: 10px 12px; }
+  .hotkey-row{ padding: 7px 10px; gap: 8px; }
+  .hotkey-keys{ min-width: 100px; }
+  .hotkey-desc{ font-size: 12.5px; }
+
+  .modal-dialog{ padding: 20px; gap: 12px; }
+  .modal-dialog h3{ font-size: 17px; }
+  .modal-message{ font-size: 13.5px; }
+}
+
+/* На узких экранах (≤480px) счётчик «N/M · готово X» прячем:
+   иначе 5 круглых кнопок + счётчик + кнопка «МЕТКА» не помещаются в одну строку. */
+@media (max-width: 480px){
+  footer .counter{ display: none; }
 }
 
 @media (max-width: 400px){
   .filename{ max-width: 60px; }
   .brand-title{ font-size: 17px; }
+  .autosave-hint{ display: none; }
 }
 </style>
 </head>
@@ -653,6 +924,12 @@ footer .counter{
   </div>
 
   <div class="actions">
+    <button class="btn-icon" id="hotkeysBtn"
+            title="Keyboard shortcuts"
+            data-i18n-title="hotkeysBtnTitle"
+            aria-label="Keyboard shortcuts">
+      <svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
+    </button>
     <button class="btn-icon" id="langBtn" title="Switch to Russian"
             data-i18n-title="langTitle">
       <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
@@ -667,11 +944,23 @@ footer .counter{
 <main>
   <div class="toolbar">
     <div class="row player-row">
-      <input type="file" id="file" accept="audio/*" hidden>
+      <input type="file" id="file" accept="audio/*,video/*" hidden>
       <button class="btn-small" id="openBtn">
         <span data-i18n="open">Open</span>
       </button>
+      <button class="btn-icon subtle" id="infoBtn"
+              title="Supported formats"
+              data-i18n-title="infoBtnTitle">
+        <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      </button>
       <span class="filename" id="trackName">no file selected</span>
+      <button class="btn-icon subtle" id="clearFileBtn" hidden
+              title="Remove file"
+              data-i18n-title="clearFileTitle"
+              aria-label="Remove file">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+      <span class="autosave-hint" id="autosaveHint"></span>
       <span class="sep-vert"></span>
       <button class="btn-icon" id="backBtn" data-i18n-title="backTitle" title="Back 3 seconds">
         <svg viewBox="0 0 24 24"><path d="M12.5 3a9 9 0 1 0 8.5 12h-2.1a7 7 0 1 1-6.4-10v3l5-5-5-5v3zM11 16.5V9.5l4 3.5-4 3.5z"/></svg>
@@ -687,6 +976,11 @@ footer .counter{
         <span class="sep">/</span>
         <span class="total" id="total">00:00.00</span>
       </div>
+    </div>
+
+    <div class="progress-row">
+      <input type="range" id="progressBar" min="0" max="1000" value="0" step="1"
+             aria-label="Seek">
     </div>
 
     <div class="row">
@@ -711,6 +1005,12 @@ footer .counter{
     <div class="head">
       <span class="label" data-i18n="lyricsLabel">LYRICS</span>
       <button class="btn-small ghost" id="parseBtn" data-i18n="parseBtn">Parse text</button>
+      <input type="file" id="lrcFile" accept=".lrc,.txt,text/plain" hidden>
+      <button class="btn-icon subtle" id="importLrcBtn"
+              data-i18n-title="importLrcTitle" title="Import LRC file"
+              aria-label="Import LRC file">
+        <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5z"/></svg>
+      </button>
       <span class="spacer"></span>
       <button class="btn-icon subtle" id="collapseBtn" aria-label="Collapse">
         <svg id="collapseIcon" viewBox="0 0 24 24"></svg>
@@ -745,7 +1045,25 @@ Each line = one LRC line."></textarea>
   <button class="btn-icon" id="undoBtn" data-i18n-title="undoTitle" title="Undo last stamp (Backspace)">
     <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
   </button>
+  <button class="btn-icon" id="resetStampsBtn" data-i18n-title="resetStampsTitle"
+          title="Reset all timestamps">
+    <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+  </button>
+  <button class="btn-icon" id="prevPointerBtn" disabled
+          data-i18n-title="prevPointerTitle" title="Previous word / line"
+          aria-label="Previous word or line">
+    <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+  </button>
+  <button class="btn-icon" id="nextPointerBtn" disabled
+          data-i18n-title="nextPointerTitle" title="Next word / line"
+          aria-label="Next word or line">
+    <svg viewBox="0 0 24 24"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+  </button>
   <button id="stampBtn" disabled data-i18n="stampIdle">⏱ STAMP · Space</button>
+  <button id="instrumentalBtn" data-i18n-title="addInstrumentalTitle"
+          title="Add instrumental break">
+    <svg viewBox="0 0 24 24"><path d="M4 11h16v2H4z"/></svg>
+  </button>
   <span class="counter" id="counter">—</span>
   <button class="btn-icon" id="exportBtn" data-i18n-title="exportTitle" title="Export LRC">
     <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -794,6 +1112,128 @@ Each line = one LRC line."></textarea>
   </div>
 </div>
 
+<div class="overlay" id="infoOverlay">
+  <div class="dialog info-dialog">
+    <h3 data-i18n="infoTitle">Supported formats</h3>
+
+    <div class="info-section">
+      <div class="info-section-head">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+        <span data-i18n="infoAudioLabel">Audio</span>
+      </div>
+      <div class="format-chips">
+        <span class="format-chip">MP3</span>
+        <span class="format-chip">WAV</span>
+        <span class="format-chip">FLAC</span>
+        <span class="format-chip">OGG</span>
+        <span class="format-chip">AAC</span>
+        <span class="format-chip">M4A</span>
+        <span class="format-chip">Opus</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-head">
+        <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+        <span data-i18n="infoVideoLabel">Video</span>
+      </div>
+      <div class="format-chips">
+        <span class="format-chip">MP4</span>
+        <span class="format-chip">WebM</span>
+        <span class="format-chip">MOV</span>
+        <span class="format-chip">M4V</span>
+      </div>
+    </div>
+
+    <div class="info-note" data-i18n="infoNote">
+      Video files are used for their audio track only. Large files (over 200 MB) may slow down mobile devices.
+    </div>
+
+    <div class="actions">
+      <button class="btn-filled" id="closeInfo" data-i18n="okInfo">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="hotkeysOverlay">
+  <div class="dialog info-dialog">
+    <h3 data-i18n="hotkeysTitle">Keyboard shortcuts</h3>
+
+    <div class="info-section">
+      <div class="info-section-head">
+        <svg viewBox="0 0 24 24"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
+        <span data-i18n="hotkeysKbdLabel">Keyboard</span>
+      </div>
+      <div class="hotkeys-list">
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>Space</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyStamp">Set timestamp</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>Backspace</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyUndo">Undo last stamp</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>P</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyPlay">Play / pause</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>M</kbd><span class="sep">/</span><kbd>Ь</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyInstrumental">Add instrumental break (empty line)</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>←</kbd><span class="sep">/</span><kbd>→</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeySeek">Seek ±3 seconds</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd data-i18n="keyPrevPointer">,</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyPrevPointer">Move pointer to previous word / line (no seek)</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd data-i18n="keyNextPointer">.</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyNextPointer">Move pointer to next word / line (no seek)</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd>Enter</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyJump">Jump to the selected word / line (if it has a timestamp)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-section-head">
+        <svg viewBox="0 0 24 24"><path d="M13.64 21.97c1.94 0 3.98-.55 5.09-1.68 1.11-1.13 1.27-2.81 1.27-4.29 0-2.01-.63-3.27-1.86-4.17-1.09-.79-2.61-1.08-4.42-1.08h-3.6c-.55 0-1-.45-1-1s.45-1 1-1h4.6c.55 0 1 .45 1 1 0 .55-.45 1-1 1h-2.15v4.32h2.15c1.1 0 2-.9 2-2s-.9-2-2-2H11.4c-1.1 0-2 .9-2 2 0 1.05.81 1.91 1.84 1.99v.01H7.6c-1.1 0-2 .9-2 2 0 1.05.81 1.91 1.84 1.99v.01c-1.03.08-1.84.94-1.84 1.99 0 1.1.9 2 2 2h1.7c.24 1.35 1.42 2.38 2.34 2.38z"/></svg>
+        <span data-i18n="hotkeysMouseLabel">Mouse / Touch</span>
+      </div>
+      <div class="hotkeys-list">
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd data-i18n="mouseLmb">LMB</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyClick">Click on a word or line — select it and jump to its time (if it has a timestamp)</div>
+        </div>
+        <div class="hotkey-row">
+          <div class="hotkey-keys"><kbd data-i18n="mouseLmb">LMB</kbd></div>
+          <div class="hotkey-desc" data-i18n="hotkeyTsClick">Click on a timestamp — edit it</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-filled" id="closeHotkeys" data-i18n="okInfo">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalOverlay">
+  <div class="modal-dialog" role="dialog" aria-modal="true">
+    <h3 id="modalTitle">Info</h3>
+    <p class="modal-message" id="modalMessage"></p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="modalCancel">Cancel</button>
+      <button class="modal-btn confirm" id="modalConfirm">OK</button>
+    </div>
+  </div>
+</div>
+
 <script>
 "use strict";
 
@@ -803,6 +1243,34 @@ const I18N = {
     themeTitle: "Change theme",
     open: "Open",
     noFile: "no file selected",
+    infoBtnTitle: "Supported formats",
+    infoTitle: "Supported formats",
+    infoAudioLabel: "Audio",
+    infoVideoLabel: "Video",
+    infoNote: "Video files are used for their audio track only. Large files (over 200 MB) may slow down mobile devices.",
+    okInfo: "Got it",
+    hotkeysBtnTitle: "Keyboard shortcuts",
+    hotkeysTitle: "Keyboard shortcuts",
+    hotkeysKbdLabel: "Keyboard",
+    hotkeysMouseLabel: "Mouse / Touch",
+    hotkeyStamp: "Set timestamp",
+    hotkeyUndo: "Undo last stamp",
+    hotkeyPlay: "Play / pause",
+    hotkeyInstrumental: "Add instrumental break (empty line)",
+    hotkeySeek: "Seek ±3 seconds",
+    hotkeyPrevPointer: "Move pointer to previous word / line (no seek)",
+    hotkeyNextPointer: "Move pointer to next word / line (no seek)",
+    hotkeyJump: "Jump to the selected word / line (if it has a timestamp)",
+    hotkeyClick: "Click on a word or line — select it and jump to its time (if it has a timestamp)",
+    hotkeyTsClick: "Click on a timestamp — edit it",
+    mouseLmb: "LMB",
+    keyPrevPointer: ",",
+    keyNextPointer: ".",
+    prevPointerTitle: "Previous word / line (,)",
+    nextPointerTitle: "Next word / line (.)",
+    unsupportedFormat: "This file format is not supported by your browser.\nTry MP3, WAV, FLAC, MP4, or WebM.",
+    largeFileWarn: "The file is over 200 MB. It may slow down your device.\nContinue anyway?",
+    clearFileTitle: "Remove file",
     backTitle: "Back 3 seconds",
     playTitle: "Play / Pause (P)",
     fwdTitle: "Forward 3 seconds",
@@ -812,13 +1280,17 @@ const I18N = {
     speedLabel: "Speed:",
     lyricsLabel: "LYRICS",
     parseBtn: "Parse text",
+    importLrcTitle: "Import existing LRC file",
+    importLrcErrorTitle: "Import error",
+    importLrcEmpty: "Could not recognize the LRC file. Please check the format and try again.",
     clearTitle: "Clear text and word split",
     collapseTitle: "Collapse lyrics block",
     expandTitle: "Expand lyrics block",
-    hint: '<kbd>Space</kbd> stamp · <kbd>Backspace</kbd> undo · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3s · <kbd>Shift</kbd>+click seek · click timestamp — edit',
+    hint: '<kbd>Space</kbd> stamp · <kbd>Backspace</kbd> undo · <kbd>P</kbd> play · <kbd>M</kbd> instrumental · <kbd>←</kbd><kbd>→</kbd> ±3s · <kbd>,</kbd><kbd>.</kbd> pointer · <kbd>Enter</kbd> jump · click word / timestamp',
     srcPlaceholder: "Paste the lyrics here.\nEach line = one LRC line.",
     empty: '1. Open an audio file<br>2. Paste the ready lyrics<br>3. Click "Parse text"<br>4. Press "STAMP" or Space to set timestamps<br>5. Click a word\'s timestamp to edit it manually',
     undoTitle: "Undo last stamp (Backspace)",
+    resetStampsTitle: "Reset all timestamps",
     stampIdle: "⏱ STAMP · Space",
     stampDone: "✓ All words stamped",
     exportTitle: "Export LRC",
@@ -835,14 +1307,52 @@ const I18N = {
     copyBtnDone: "✓ Copied",
     closeBtn: "Close",
     counterDone: "done",
-    noStamps: "No timestamps yet — nothing to export.",
-    confirmClear: "Clear the lyrics and word split?\nAll unsaved timestamps will be lost."
+    noStamps: "Nothing to export — the lyrics are empty.",
+    confirmClear: "Clear the lyrics and word split?\nAll unsaved timestamps will be lost.",
+    confirmResetStamps: "Reset all timestamps?\n\nWords and text will stay, but all time marks (word and line) will be cleared, and instrumental inserts will be removed.",
+    resetStampsTitleDialog: "Reset timestamps",
+    autosaveLabel: "Saved",
+    addInstrumentalTitle: "Add instrumental break (empty line)",
+    instrumentalTitle: "Instrumental break",
+    instrumentalInfo: "Adds an empty line with a timestamp — for instrumental breaks where there are no words.\n\nThe player receives a signal to hide the text at that moment.\n\nFirst paste the lyrics and click “Parse text”.",
+    modalTitle: "Information",
+    modalConfirmTitle: "Confirmation",
+    modalConfirm: "Confirm",
+    modalCancel: "Cancel"
   },
   ru: {
     langTitle: "Переключить на английский",
     themeTitle: "Сменить тему",
     open: "Открыть",
     noFile: "файл не выбран",
+    infoBtnTitle: "Поддерживаемые форматы",
+    infoTitle: "Поддерживаемые форматы",
+    infoAudioLabel: "Аудио",
+    infoVideoLabel: "Видео",
+    infoNote: "Видеофайлы используются только для воспроизведения звуковой дорожки. Большие файлы (свыше 200 МБ) могут замедлить работу на мобильных устройствах.",
+    okInfo: "Понятно",
+    hotkeysBtnTitle: "Горячие клавиши",
+    hotkeysTitle: "Горячие клавиши",
+    hotkeysKbdLabel: "Клавиатура",
+    hotkeysMouseLabel: "Мышь / касание",
+    hotkeyStamp: "Поставить метку",
+    hotkeyUndo: "Отменить последнюю метку",
+    hotkeyPlay: "Play / пауза",
+    hotkeyInstrumental: "Добавить проигрыш (пустая строка)",
+    hotkeySeek: "Перемотка на 3 секунды",
+    hotkeyPrevPointer: "Указатель на предыдущее слово / строку (без перехода по времени)",
+    hotkeyNextPointer: "Указатель на следующее слово / строку (без перехода по времени)",
+    hotkeyJump: "Перейти к выбранному слову / строке (если есть таймкод)",
+    hotkeyClick: "Клик по слову или строке — выбрать и перейти к его времени (если есть таймкод)",
+    hotkeyTsClick: "Клик по таймкоду — правка",
+    mouseLmb: "ЛКМ",
+    keyPrevPointer: "Б",
+    keyNextPointer: "Ю",
+    prevPointerTitle: "Предыдущее слово / строка (Б)",
+    nextPointerTitle: "Следующее слово / строка (Ю)",
+    unsupportedFormat: "Этот формат не поддерживается вашим браузером.\nПопробуйте MP3, WAV, FLAC, MP4 или WebM.",
+    largeFileWarn: "Файл больше 200 МБ. Это может замедлить работу устройства.\nПродолжить?",
+    clearFileTitle: "Убрать файл",
     backTitle: "Назад на 3 секунды",
     playTitle: "Play / Pause (P)",
     fwdTitle: "Вперёд на 3 секунды",
@@ -852,13 +1362,17 @@ const I18N = {
     speedLabel: "Скорость:",
     lyricsLabel: "ТЕКСТ ПЕСНИ",
     parseBtn: "Разобрать текст",
+    importLrcTitle: "Импортировать существующий LRC-файл",
+    importLrcErrorTitle: "Ошибка импорта",
+    importLrcEmpty: "Не удалось распознать LRC-файл. Проверьте формат и попробуйте снова.",
     clearTitle: "Очистить текст и разбивку",
     collapseTitle: "Свернуть блок текста",
     expandTitle: "Развернуть блок текста",
-    hint: '<kbd>Space</kbd> метка · <kbd>Backspace</kbd> отменить · <kbd>P</kbd> play · <kbd>←</kbd><kbd>→</kbd> ±3с · <kbd>Shift</kbd>+клик перейти · клик по таймкоду — правка',
+    hint: '<kbd>Space</kbd> метка · <kbd>Backspace</kbd> отменить · <kbd>P</kbd> play · <kbd>M</kbd> проигрыш · <kbd>←</kbd><kbd>→</kbd> ±3с · <kbd>Б</kbd><kbd>Ю</kbd> указатель · <kbd>Enter</kbd> переход · клик по слову / таймкоду',
     srcPlaceholder: "Вставьте сюда текст песни.\nКаждая строка = одна строка LRC.",
     empty: '1. Откройте аудиофайл<br>2. Вставьте готовый текст песни<br>3. Нажмите «Разобрать текст»<br>4. Ставьте метки кнопкой «МЕТКА» или Space<br>5. Кликните по таймкоду — правка',
     undoTitle: "Отменить последнюю метку (Backspace)",
+    resetStampsTitle: "Сбросить все таймкоды",
     stampIdle: "⏱ МЕТКА · Space",
     stampDone: "✓ Все слова отмечены",
     exportTitle: "Экспорт LRC",
@@ -875,8 +1389,18 @@ const I18N = {
     copyBtnDone: "✓ Скопировано",
     closeBtn: "Закрыть",
     counterDone: "готово",
-    noStamps: "Пока нет ни одной метки — нечего экспортировать.",
-    confirmClear: "Очистить текст песни и разбивку?\nВсе несохранённые метки будут потеряны."
+    noStamps: "Нечего экспортировать — текст песни пуст.",
+    confirmClear: "Очистить текст песни и разбивку?\nВсе несохранённые метки будут потеряны.",
+    confirmResetStamps: "Сбросить все таймкоды?\n\nСлова и текст сохранятся, но все временные метки (пословные и построчные) будут удалены, а вставки проигрышей — убраны.",
+    resetStampsTitleDialog: "Сброс таймкодов",
+    autosaveLabel: "Сохранено",
+    addInstrumentalTitle: "Добавить проигрыш (пустая строка)",
+    instrumentalTitle: "Инструментальный проигрыш",
+    instrumentalInfo: "Добавляет пустую строку с таймкодом — для инструментальных проигрышей, где нет слов.\n\nПлеер получит сигнал скрыть текст в этот момент.\n\nСначала вставьте текст песни и нажмите «Разобрать текст».",
+    modalTitle: "Информация",
+    modalConfirmTitle: "Подтверждение",
+    modalConfirm: "Подтвердить",
+    modalCancel: "Отмена"
   }
 };
 
@@ -906,6 +1430,7 @@ function applyTranslations(lang){
   });
 
   $("#trackName").textContent = state.file ? state.file.name : dict.noFile;
+  $("#clearFileBtn").hidden = !state.file;
 
   const stampBtn = $("#stampBtn");
   if (state.flat.length && state.wordPointer >= state.flat.length){
@@ -951,6 +1476,23 @@ function updateCounterText(){
   }
 }
 
+/* Обновление доступности кнопок навигации указателя (стрелки ‹ ›). */
+function updatePointerButtons(){
+  const prevBtn = $("#prevPointerBtn");
+  const nextBtn = $("#nextPointerBtn");
+  if (!prevBtn || !nextBtn) return;
+
+  if (state.mode === "word"){
+    const n = state.flat.length;
+    prevBtn.disabled = n === 0 || state.wordPointer <= 0;
+    nextBtn.disabled = n === 0 || state.wordPointer >= n - 1;
+  } else {
+    const n = state.lines.length;
+    prevBtn.disabled = n === 0 || state.linePointer <= 0;
+    nextBtn.disabled = n === 0 || state.linePointer >= n - 1;
+  }
+}
+
 function switchLanguage(){
   if (document.documentElement.classList.contains("lang-anim")) return;
   const next = currentLang === "en" ? "ru" : "en";
@@ -966,6 +1508,48 @@ function switchLanguage(){
   }, 230);
 }
 
+function showAlert(message, title){
+  return new Promise(resolve => {
+    const overlay = $("#modalOverlay");
+    $("#modalTitle").textContent = title || t("modalTitle");
+    $("#modalMessage").textContent = message;
+    $("#modalCancel").style.display = "none";
+    $("#modalConfirm").textContent = t("ok");
+
+    overlay.classList.add("show");
+
+    const onConfirm = () => {
+      overlay.classList.remove("show");
+      $("#modalConfirm").removeEventListener("click", onConfirm);
+      resolve(true);
+    };
+    $("#modalConfirm").addEventListener("click", onConfirm);
+  });
+}
+
+function showConfirm(message, title){
+  return new Promise(resolve => {
+    const overlay = $("#modalOverlay");
+    $("#modalTitle").textContent = title || t("modalConfirmTitle");
+    $("#modalMessage").textContent = message;
+    $("#modalCancel").style.display = "";
+    $("#modalConfirm").textContent = t("modalConfirm");
+    $("#modalCancel").textContent = t("modalCancel");
+
+    overlay.classList.add("show");
+
+    const onConfirm = () => { cleanup(); resolve(true); };
+    const onCancel = () => { cleanup(); resolve(false); };
+    const cleanup = () => {
+      overlay.classList.remove("show");
+      $("#modalConfirm").removeEventListener("click", onConfirm);
+      $("#modalCancel").removeEventListener("click", onCancel);
+    };
+    $("#modalConfirm").addEventListener("click", onConfirm);
+    $("#modalCancel").addEventListener("click", onCancel);
+  });
+}
+
 const ICON_CHEVRON_UP = "M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z";
 const ICON_CHEVRON_DOWN = "M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z";
 
@@ -973,11 +1557,9 @@ function setLyricsCollapsed(collapsed){
   const panel = document.getElementById("lyricsPanel");
   const icon = document.getElementById("collapseIcon");
   if (!panel || !icon) return;
-
   panel.classList.toggle("collapsed", collapsed);
   icon.innerHTML = `<path d="${collapsed ? ICON_CHEVRON_DOWN : ICON_CHEVRON_UP}"/>`;
   updateCollapseBtnTitle();
-
   localStorage.setItem("lrc-collapsed", collapsed ? "1" : "0");
 }
 
@@ -989,6 +1571,8 @@ function toggleLyricsCollapsed(){
 
 const audio = new Audio();
 audio.preload = "auto";
+
+let audioMetadataLoaded = false;
 
 const state = {
   file: null,
@@ -1006,6 +1590,8 @@ const tsEditor = $("#tsEditor");
 const tsInput = $("#tsInput");
 const tsBtnPrev = $("#tsCopyPrev");
 const tsBtnNext = $("#tsCopyNext");
+const progressBar = $("#progressBar");
+let userSeeking = false;
 
 function fmt(time){
   time = Math.max(0, time || 0);
@@ -1036,7 +1622,65 @@ function scrollCurrentToCenter(el){
   stage.scrollTo({ top: finalTop, behavior: "smooth" });
 }
 
+function getLineStartTime(line){
+  if (line.time != null) return line.time;
+  if (line.words.length === 0) return null;
+  const stamped = line.words.filter(w => w.start != null);
+  if (!stamped.length) return null;
+  return line.words[0].start != null ? line.words[0].start : stamped[0].start;
+}
+
+/* Переход к текущему выбранному слову / строке (для горячей клавиши Enter).
+   Делает seek только если у слова / строки есть таймкод. */
+function seekToCurrent(){
+  if (state.mode === "word"){
+    if (state.wordPointer >= 0 && state.wordPointer < state.flat.length){
+      const w = state.flat[state.wordPointer];
+      if (w && w.start != null){
+        audio.currentTime = w.start;
+      }
+    }
+  } else {
+    if (state.linePointer >= 0 && state.linePointer < state.lines.length){
+      const l = state.lines[state.linePointer];
+      if (l && l.time != null){
+        audio.currentTime = l.time;
+      }
+    }
+  }
+}
+
+/* Перемещение указателя на следующее / предыдущее слово (в пословном режиме)
+   или строку (в построчном режиме). БЕЗ перехода по времени.
+   direction: +1 — вперёд, -1 — назад. */
+function movePointer(direction){
+  closeEditor();
+  if (!state.lines.length) return;
+
+  if (state.mode === "word"){
+    if (!state.flat.length) return;
+    const idx = state.wordPointer + direction;
+    if (idx < 0 || idx >= state.flat.length) return;
+    state.wordPointer = idx;
+    const li = findLineOfWord(idx);
+    if (li >= 0) state.linePointer = li;
+  } else {
+    const idx = state.linePointer + direction;
+    if (idx < 0 || idx >= state.lines.length) return;
+    state.linePointer = idx;
+    const line = state.lines[idx];
+    if (line && line.words.length){
+      state.wordPointer = firstWordIndex(idx);
+    }
+  }
+  render();
+}
+
 function parseLyrics(text){
+  const instrumentals = state.lines
+    .filter(l => l.isInstrumental && l.time != null)
+    .map(l => ({ time: l.time, words: [], isInstrumental: true }));
+
   const oldFlat = state.flat;
   const oldLines = state.lines;
 
@@ -1062,15 +1706,138 @@ function parseLyrics(text){
     }
   });
 
+  for (const il of instrumentals){
+    let idx = 0;
+    while (idx < newLines.length){
+      const lt = getLineStartTime(newLines[idx]);
+      if (lt == null || lt > il.time) break;
+      idx++;
+    }
+    newLines.splice(idx, 0, il);
+  }
+
   state.lines = newLines;
   state.flat = newFlat;
 
-  state.linePointer = state.lines.findIndex(l => l.time == null);
+  state.linePointer = state.lines.findIndex(l => l.time == null && !l.isInstrumental);
   if (state.linePointer === -1) state.linePointer = state.lines.length;
   state.wordPointer = state.flat.findIndex(w => w.start == null);
   if (state.wordPointer === -1) state.wordPointer = state.flat.length;
 
   render();
+}
+
+/* Парсинг LRC-файла.
+   Поддерживает:
+   - [mm:ss.xx]<mm:ss.xx>слово — пословный формат
+   - [mm:ss.xx]текст строки — построчный формат
+   - [mm:ss.xx] — инструментальная вставка (пустая строка)
+   - обычный текст без таймкода — неотмеченная строка (сохраняется как есть)
+   Метаданные вида [ar:...], [ti:...] игнорируются. */
+function parseLRCContent(text){
+  if (!text) return [];
+  text = text.replace(/^\uFEFF/, "");
+
+  const result = [];
+  const rawLines = text.split(/\r?\n/);
+
+  for (const rawLine of rawLines){
+    const trimmed = rawLine.trim();
+    if (!trimmed) continue;
+
+    // Пропускаем метаданные LRC: [ar:Artist], [ti:Title], [al:Album] и т.п.
+    if (/^\[[a-zA-Z]+:[^\]]*\]$/.test(trimmed)) continue;
+
+    const lineMatch = trimmed.match(/^\[(\d+:\d+(?:[.,]\d+)?)\]([\s\S]*)$/);
+
+    // Нет таймкода → сохраняем как неотмеченную текстовую строку
+    if (!lineMatch){
+      const words = trimmed.split(/\s+/).filter(Boolean).map(w => ({ text: w, start: null }));
+      if (words.length) result.push({ time: null, words });
+      continue;
+    }
+
+    const lineTime = parseTime(lineMatch[1]);
+    if (lineTime == null) continue;
+    const rest = lineMatch[2];
+
+    // Пустая строка с таймкодом → инструментальная вставка
+    if (!rest.trim()){
+      result.push({ time: lineTime, words: [], isInstrumental: true });
+      continue;
+    }
+
+    // Пословный формат (есть теги <..>)
+    if (rest.indexOf("<") !== -1){
+      const words = [];
+      const re = /<(\d+:\d+(?:[.,]\d+)?)>([^<]*)/g;
+      let m;
+      while ((m = re.exec(rest)) !== null){
+        const wt = parseTime(m[1]);
+        const chunk = (m[2] || "").trim();
+        if (!chunk) continue; // закрывающий тег <..> без текста
+        if (wt == null) continue;
+        // Разбиваем чанк на отдельные слова: первое получает таймкод,
+        // последующие (не отмеченные) идут с start: null.
+        const parts = chunk.split(/\s+/).filter(Boolean);
+        parts.forEach((txt, idx) => {
+          words.push({ text: txt, start: idx === 0 ? wt : null });
+        });
+      }
+      if (words.length){
+        result.push({ time: lineTime, words });
+      } else {
+        // Строка только с закрывающим тегом — считаем инструментальной
+        result.push({ time: lineTime, words: [], isInstrumental: true });
+      }
+    } else {
+      // Построчный формат — каждое слово без таймкода
+      const words = rest.trim().split(/\s+/).filter(Boolean).map(w => ({ text: w, start: null }));
+      if (words.length){
+        result.push({ time: lineTime, words });
+      }
+    }
+  }
+
+  return result;
+}
+
+function importLrc(text){
+  const parsed = parseLRCContent(text);
+  if (!parsed.length){
+    showAlert(t("importLrcEmpty"), t("importLrcErrorTitle"));
+    return;
+  }
+
+  closeEditor();
+
+  // Режим: если хотя бы одно слово имеет таймкод — пословный, иначе — построчный.
+  const hasWordStamps = parsed.some(l => l.words.some(w => w.start != null));
+  const newMode = hasWordStamps ? "word" : "line";
+
+  state.lines = parsed;
+  state.flat = [];
+  for (const l of parsed) for (const w of l.words) state.flat.push(w);
+  state.mode = newMode;
+
+  // Чистый текст без таймкодов и тегов — для textarea
+  const plainText = parsed
+    .filter(l => !l.isInstrumental && l.words.length)
+    .map(l => l.words.map(w => w.text).join(" "))
+    .join("\n");
+  $("#src").value = plainText;
+  localStorage.setItem("lrc-src", plainText);
+
+  state.linePointer = state.lines.findIndex(l => l.time == null && !l.isInstrumental);
+  if (state.linePointer === -1) state.linePointer = state.lines.length;
+  state.wordPointer = state.flat.findIndex(w => w.start == null);
+  if (state.wordPointer === -1) state.wordPointer = state.flat.length;
+
+  document.querySelectorAll('[data-mode]').forEach(x =>
+    x.classList.toggle("active", x.dataset.mode === state.mode));
+
+  render();
+  markUnsaved();
 }
 
 function render(){
@@ -1083,6 +1850,7 @@ function render(){
     $("#counter").textContent = "—";
     $("#stampBtn").disabled = true;
     $("#stampBtn").textContent = t("stampIdle");
+    updatePointerButtons();
     return;
   }
 
@@ -1093,6 +1861,30 @@ function render(){
     const lineEl = document.createElement("div");
     lineEl.className = "line";
     lineEl.dataset.lineIdx = li;
+
+    if (line.words.length === 0){
+      lineEl.classList.add("empty-line");
+      if (state.mode === "line" && li === state.linePointer) lineEl.classList.add("current");
+      if (line.time != null){
+        const tk = document.createElement("span");
+        tk.className = "line-time";
+        tk.textContent = "[" + fmt(line.time) + "]";
+        tk.title = "Click to edit";
+        tk.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openEditor({type: "line", index: li}, lineEl);
+        });
+        lineEl.appendChild(tk);
+      }
+      lineEl.addEventListener("click", (e) => {
+        if (e.target.classList.contains("line-time")) return;
+        if (line.time != null){
+          audio.currentTime = line.time;
+        }
+      });
+      frag.appendChild(lineEl);
+      return;
+    }
 
     if (state.mode === "line" && li === state.linePointer) lineEl.classList.add("current");
     if (line.time != null) lineEl.classList.add("stamped");
@@ -1138,14 +1930,16 @@ function render(){
       txt.textContent = w.text;
       wEl.appendChild(txt);
 
+      /* Клик по слову:
+         - всегда выбираем слово (устанавливаем указатель);
+         - если у слова есть таймкод → переход к его времени. */
       wEl.addEventListener("click", (e) => {
         if (e.target.classList.contains("w-time")) return;
-        if (e.shiftKey && state.flat[i].start != null){
-          audio.currentTime = state.flat[i].start;
-          return;
-        }
         if (state.mode === "word") state.wordPointer = i;
         else state.linePointer = li;
+        if (w.start != null){
+          audio.currentTime = w.start;
+        }
         render();
       });
 
@@ -1153,10 +1947,15 @@ function render(){
       wordIdx++;
     });
 
+    /* Клик по строке (по свободному месту, не по слову):
+       - в построчном режиме → выбираем строку + seek, если есть таймкод строки;
+       - в пословном режиме → как раньше, ставим указатель на первое неназначенное слово. */
     lineEl.addEventListener("click", (e) => {
       if (e.target.closest(".word")) return;
+      if (e.target.classList.contains("line-time")) return;
       if (state.mode === "line"){
         state.linePointer = li;
+        if (line.time != null) audio.currentTime = line.time;
       } else {
         let fi = -1;
         let k = 0;
@@ -1185,6 +1984,7 @@ function render(){
   stampBtn.textContent = stampBtn.disabled ? t("stampDone") : t("stampIdle");
 
   updateCounterText();
+  updatePointerButtons();
 
   const cur = stage.querySelector(".word.current, .line.current");
   if (cur){
@@ -1210,6 +2010,10 @@ function stamp(){
     state.wordPointer++;
   } else {
     if (state.linePointer >= state.lines.length) return;
+    while (state.linePointer < state.lines.length && state.lines[state.linePointer].isInstrumental){
+      state.linePointer++;
+    }
+    if (state.linePointer >= state.lines.length) return;
     state.lines[state.linePointer].time = audio.currentTime || 0;
     state.linePointer++;
   }
@@ -1218,7 +2022,9 @@ function stamp(){
   btn.classList.remove("hit");
   void btn.offsetWidth;
   btn.classList.add("hit");
+  markUnsaved();
 }
+
 function findLineOfWord(wordIdx){
   let k = 0;
   for (let i = 0; i < state.lines.length; i++){
@@ -1250,16 +2056,81 @@ function undo(){
     state.lines[state.linePointer].time = null;
   }
   render();
+  markUnsaved();
 }
-function clearAll(){
+
+/* Сброс ВСЕХ таймкодов (пословных и построчных), плюс удаление инструментальных вставок */
+async function resetAllTimestamps(){
+  const hasWordStamps = state.flat.some(w => w.start != null);
+  const hasLineStamps = state.lines.some(l => l.time != null);
+  if (!hasWordStamps && !hasLineStamps){
+    return;
+  }
+
+  if (!await showConfirm(t("confirmResetStamps"), t("resetStampsTitleDialog"))){
+    return;
+  }
+
+  closeEditor();
+
+  state.lines = state.lines.filter(l => !l.isInstrumental);
+
+  for (const line of state.lines){
+    line.time = null;
+    for (const w of line.words) w.start = null;
+  }
+
+  state.linePointer = 0;
+  state.wordPointer = 0;
+
+  render();
+  markUnsaved();
+}
+
+async function insertInstrumental(){
+  if (!state.lines.length){
+    await showAlert(t("instrumentalInfo"), t("instrumentalTitle"));
+    return;
+  }
+
+  const tm = audio.currentTime || 0;
+  const emptyLine = { time: tm, words: [], isInstrumental: true };
+
+  let insertAt;
+  if (state.mode === "word"){
+    insertAt = findLineOfWord(state.wordPointer);
+    if (insertAt === -1) insertAt = state.lines.length;
+  } else {
+    insertAt = state.linePointer;
+    if (insertAt >= state.lines.length) insertAt = state.lines.length;
+  }
+
+  state.lines.splice(insertAt, 0, emptyLine);
+
+  if (state.mode === "line" && state.linePointer >= insertAt){
+    state.linePointer++;
+  }
+
+  render();
+  markUnsaved();
+
+  const btn = $("#instrumentalBtn");
+  btn.classList.remove("flash");
+  void btn.offsetWidth;
+  btn.classList.add("flash");
+}
+
+async function clearAll(){
   const hasText = $("#src").value.trim().length > 0;
   const hasParsed = state.lines.length > 0;
   if (!hasText && !hasParsed) return;
-  if (!confirm(t("confirmClear"))) return;
+  if (!await showConfirm(t("confirmClear"))) return;
 
   closeEditor();
   $("#src").value = "";
   localStorage.removeItem("lrc-src");
+  localStorage.removeItem("lyriq-autosave");
+  localStorage.removeItem("lyriq-autosave-time");
   state.lines = [];
   state.flat = [];
   state.linePointer = 0;
@@ -1268,26 +2139,91 @@ function clearAll(){
   $("#src").focus();
 }
 
+function clearFile(){
+  if (!state.file) return;
+
+  try { audio.pause(); } catch(e) {}
+  if (audio.src && audio.src.startsWith("blob:")){
+    URL.revokeObjectURL(audio.src);
+  }
+  audio.removeAttribute("src");
+  try { audio.load(); } catch(e) {}
+
+  state.file = null;
+  audioMetadataLoaded = false;
+
+  $("#trackName").textContent = t("noFile");
+  $("#clock").textContent = "00:00.00";
+  $("#total").textContent = "00:00.00";
+  $("#playIcon").innerHTML = '<path d="M8 5v14l11-7z"/>';
+  progressBar.value = 0;
+  progressBar.style.setProperty("--progress", "0%");
+  $("#clearFileBtn").hidden = true;
+  brandIcon.classList.remove("playing");
+}
+
+/* Сборка LRC.
+   Сохраняем ПОЛНЫЙ текст, включая неотмеченные строки:
+   - строки без таймкода выводятся как обычный текст (без [..])
+   - такие строки стандартные плееры игнорируют, а наш импорт их восстанавливает */
 function buildLRC(){
   const out = [];
-  for (const line of state.lines){
-    if (!line.words.length) continue;
+  for (let li = 0; li < state.lines.length; li++){
+    const line = state.lines[li];
+
+    // Инструментальные вставки — только если у них есть таймкод
+    if (line.words.length === 0){
+      if (line.time != null){
+        out.push(`[${fmt(line.time)}]`);
+      }
+      continue;
+    }
+
     if (state.mode === "line"){
-      if (line.time == null) continue;
-      out.push(`[${fmt(line.time)}]${line.words.map(w => w.text).join(" ")}`);
+      if (line.time == null){
+        // Неотмеченная строка — сохраняем как текст без таймкода
+        out.push(line.words.map(w => w.text).join(" "));
+      } else {
+        out.push(`[${fmt(line.time)}]${line.words.map(w => w.text).join(" ")}`);
+      }
     } else {
       const stamped = line.words.filter(w => w.start != null);
-      if (!stamped.length) continue;
+      if (!stamped.length){
+        // Ни одно слово не отмечено — сохраняем текст без тегов
+        if (line.time != null){
+          out.push(`[${fmt(line.time)}]${line.words.map(w => w.text).join(" ")}`);
+        } else {
+          out.push(line.words.map(w => w.text).join(" "));
+        }
+        continue;
+      }
       const lineTime = line.words[0].start != null ? line.words[0].start : stamped[0].start;
       let s = `[${fmt(lineTime)}]`;
-      for (const w of line.words){
+      for (let wi = 0; wi < line.words.length; wi++){
+        const w = line.words[wi];
         if (w.start != null) s += `<${fmt(w.start)}>`;
-        s += w.text + " ";
+        s += w.text;
+        if (wi < line.words.length - 1) s += " ";
       }
-      out.push(s.trimEnd());
+      const nextTime = findNextLineStartTime(li);
+      if (nextTime != null){
+        s += `<${fmt(nextTime)}>`;
+      }
+      out.push(s);
     }
   }
   return out.join("\n");
+}
+
+function findNextLineStartTime(currentIdx){
+  for (let i = currentIdx + 1; i < state.lines.length; i++){
+    const tm = getLineStartTime(state.lines[i]);
+    if (tm != null) return tm;
+  }
+  if (audio.duration && isFinite(audio.duration)){
+    return audio.duration;
+  }
+  return null;
 }
 
 function togglePlay(){
@@ -1304,9 +2240,26 @@ function setSpeed(v){
   document.querySelectorAll('[data-speed]').forEach(b => {
     b.classList.toggle("active", parseFloat(b.dataset.speed) === v);
   });
+  try { localStorage.setItem("lrc-speed", String(v)); } catch(e) {}
 }
-function loadAudio(file){
-  if (audio.src) URL.revokeObjectURL(audio.src);
+
+async function loadAudio(file){
+  const type = (file.type || "").toLowerCase();
+  const isAudio = type.startsWith("audio");
+  const isVideo = type.startsWith("video");
+
+  if (!isAudio && !isVideo){
+    await showAlert(t("unsupportedFormat"));
+    return;
+  }
+
+  if (file.size > 200 * 1024 * 1024){
+    const ok = await showConfirm(t("largeFileWarn"));
+    if (!ok) return;
+  }
+
+  if (audio.src && audio.src.startsWith("blob:")) URL.revokeObjectURL(audio.src);
+  audioMetadataLoaded = false;
   state.file = file;
   audio.src = URL.createObjectURL(file);
   audio.playbackRate = state.speed;
@@ -1314,6 +2267,7 @@ function loadAudio(file){
   if ("mozPreservesPitch" in audio) audio.mozPreservesPitch = false;
   if ("webkitPreservesPitch" in audio) audio.webkitPreservesPitch = false;
   $("#trackName").textContent = file.name;
+  $("#clearFileBtn").hidden = false;
 }
 
 const ICON_MOON = "M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z";
@@ -1364,7 +2318,7 @@ function openEditor(target, anchorEl){
   tsInput.classList.remove("error");
 
   tsBtnPrev.disabled = findNeighborValue(target, -1) == null;
-  tsBtnNext.disabled = findNeighborValue(target, +1) == null;
+  tsBtnNext.disabled = findNeighborValue(target, 1) == null;
 
   tsEditor.hidden = false;
   positionEditor(anchorEl);
@@ -1404,6 +2358,7 @@ function applyEditorInput(showError){
     state.lines[editingTarget.index].time = Math.max(0, v);
     updateLineTimestamp(editingTarget.index);
   }
+  markUnsaved();
 }
 
 function nudge(deltaMs){
@@ -1489,7 +2444,7 @@ document.querySelectorAll(".ts-delta").forEach(b => {
   });
 });
 tsBtnPrev.addEventListener("click", () => copyFromNeighbor(-1));
-tsBtnNext.addEventListener("click", () => copyFromNeighbor(+1));
+tsBtnNext.addEventListener("click", () => copyFromNeighbor(1));
 $("#tsPlayhead").addEventListener("click", bindToPlayhead);
 $("#tsDone").addEventListener("click", () => closeEditor());
 tsInput.addEventListener("input", () => {
@@ -1520,10 +2475,29 @@ $("#openBtn").addEventListener("click", () => $("#file").click());
 $("#file").addEventListener("change", e => {
   const f = e.target.files[0];
   if (f) loadAudio(f);
+  e.target.value = "";
 });
-$("#playBtn").addEventListener("click", togglePlay);
 
-/* ---- Медленная пульсация логотипа при воспроизведении ---- */
+/* Импорт LRC */
+$("#importLrcBtn").addEventListener("click", () => $("#lrcFile").click());
+$("#lrcFile").addEventListener("change", async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const text = await f.text();
+    importLrc(text);
+  } catch (err){
+    await showAlert(t("importLrcEmpty"), t("importLrcErrorTitle"));
+  }
+  e.target.value = "";
+});
+
+$("#playBtn").addEventListener("click", togglePlay);
+$("#clearFileBtn").addEventListener("click", clearFile);
+$("#resetStampsBtn").addEventListener("click", resetAllTimestamps);
+$("#prevPointerBtn").addEventListener("click", () => movePointer(-1));
+$("#nextPointerBtn").addEventListener("click", () => movePointer(1));
+
 const brandIcon = document.getElementById("brandIcon");
 
 audio.addEventListener("play", () => {
@@ -1540,7 +2514,22 @@ audio.addEventListener("ended", () => {
 });
 
 audio.addEventListener("loadedmetadata", () => {
+  audioMetadataLoaded = true;
   $("#total").textContent = fmt(audio.duration || 0);
+});
+
+audio.addEventListener("error", async () => {
+  const err = audio.error;
+  const code = err ? err.code : 0;
+  if (audioMetadataLoaded) return;
+  if (code === 4 && state.file){
+    await showAlert(t("unsupportedFormat"));
+    state.file = null;
+    audioMetadataLoaded = false;
+    audio.removeAttribute("src");
+    $("#trackName").textContent = t("noFile");
+    $("#clearFileBtn").hidden = true;
+  }
 });
 
 $("#backBtn").addEventListener("click", () => {
@@ -1548,6 +2537,20 @@ $("#backBtn").addEventListener("click", () => {
 });
 $("#fwdBtn").addEventListener("click", () => {
   audio.currentTime = Math.min(audio.duration || 1e9, (audio.currentTime || 0) + 3);
+});
+
+progressBar.addEventListener("input", () => {
+  userSeeking = true;
+  if (audio.duration && isFinite(audio.duration)){
+    const pct = parseFloat(progressBar.value) / 1000;
+    const target = Math.min(audio.duration - 0.05, pct * audio.duration);
+    audio.currentTime = Math.max(0, target);
+  }
+  const pctDisplay = (parseFloat(progressBar.value) / 1000) * 100;
+  progressBar.style.setProperty("--progress", pctDisplay + "%");
+});
+progressBar.addEventListener("change", () => {
+  userSeeking = false;
 });
 
 document.querySelectorAll('[data-speed]').forEach(b => {
@@ -1566,19 +2569,22 @@ $("#stampBtn").addEventListener("click", stamp);
 $("#undoBtn").addEventListener("click", undo);
 $("#clearBtn").addEventListener("click", clearAll);
 $("#collapseBtn").addEventListener("click", toggleLyricsCollapsed);
+$("#instrumentalBtn").addEventListener("click", insertInstrumental);
 
 $("#parseBtn").addEventListener("click", () => {
   const txt = $("#src").value;
   localStorage.setItem("lrc-src", txt);
   parseLyrics(txt);
+  markUnsaved();
 });
 $("#src").addEventListener("input", () => {
   localStorage.setItem("lrc-src", $("#src").value);
+  markUnsaved();
 });
 
-$("#exportBtn").addEventListener("click", () => {
+$("#exportBtn").addEventListener("click", async () => {
   const lrc = buildLRC();
-  if (!lrc){ alert(t("noStamps")); return; }
+  if (!lrc){ await showAlert(t("noStamps")); return; }
   $("#out").value = lrc;
   $("#overlay").classList.add("show");
 });
@@ -1614,9 +2620,63 @@ $("#themeBtn").addEventListener("click", () => {
 });
 $("#langBtn").addEventListener("click", switchLanguage);
 
+$("#infoBtn").addEventListener("click", () => {
+  $("#infoOverlay").classList.add("show");
+});
+$("#closeInfo").addEventListener("click", () => {
+  $("#infoOverlay").classList.remove("show");
+});
+$("#infoOverlay").addEventListener("click", (e) => {
+  if (e.target === $("#infoOverlay")) $("#infoOverlay").classList.remove("show");
+});
+
+/* Горячие клавиши — открытие/закрытие окна */
+$("#hotkeysBtn").addEventListener("click", () => {
+  $("#hotkeysOverlay").classList.add("show");
+});
+$("#closeHotkeys").addEventListener("click", () => {
+  $("#hotkeysOverlay").classList.remove("show");
+});
+$("#hotkeysOverlay").addEventListener("click", (e) => {
+  if (e.target === $("#hotkeysOverlay")) $("#hotkeysOverlay").classList.remove("show");
+});
+
+/* Список «глобальных» клавиш-шорткатов приложения.
+   Используется ниже, чтобы снять фокус с кнопки при работе клавиатурой
+   (иначе после клика мышью по кнопке и последующей работы клавиатурой
+   на кнопке остаётся focus-ring — «подсвеченное» состояние).
+   Comma и Period — это физические клавиши, на которых на русской раскладке
+   напечатаны «б» и «ю». */
+const GLOBAL_SHORTCUT_KEYS = ["Space", "Backspace", "KeyP", "KeyM", "ArrowLeft", "ArrowRight", "Comma", "Period"];
+
 window.addEventListener("keydown", e => {
   const tag = e.target.tagName;
   if (tag === "TEXTAREA" || tag === "INPUT") return;
+
+  // Снимаем фокус с кнопок при нажатии «глобальных» клавиш.
+  if (GLOBAL_SHORTCUT_KEYS.includes(e.code)){
+    const active = document.activeElement;
+    if (active && active.tagName === "BUTTON" && !active.disabled){
+      active.blur();
+    }
+  }
+
+  if ($("#modalOverlay").classList.contains("show")){
+    if (e.code === "Escape") {
+      const cancelBtn = $("#modalCancel");
+      if (cancelBtn.style.display !== "none") cancelBtn.click();
+      else $("#modalConfirm").click();
+    }
+    return;
+  }
+  if ($("#infoOverlay").classList.contains("show")){
+    if (e.code === "Escape") $("#infoOverlay").classList.remove("show");
+    return;
+  }
+  if ($("#hotkeysOverlay").classList.contains("show")){
+    if (e.code === "Escape") $("#hotkeysOverlay").classList.remove("show");
+    return;
+  }
   if ($("#overlay").classList.contains("show")){
     if (e.code === "Escape") $("#overlay").classList.remove("show");
     return;
@@ -1626,15 +2686,35 @@ window.addEventListener("keydown", e => {
     case "Space":      e.preventDefault(); stamp(); break;
     case "Backspace":  e.preventDefault(); undo();  break;
     case "KeyP":       e.preventDefault(); togglePlay(); break;
+    case "KeyM":       e.preventDefault(); insertInstrumental(); break;
+    case "Comma":      e.preventDefault(); movePointer(-1); break;
+    case "Period":     e.preventDefault(); movePointer(1);  break;
     case "ArrowLeft":  e.preventDefault();
       audio.currentTime = Math.max(0, (audio.currentTime || 0) - 3); break;
     case "ArrowRight": e.preventDefault();
       audio.currentTime = Math.min(audio.duration || 1e9, (audio.currentTime || 0) + 3); break;
+    case "Enter":
+      // Не перехватываем Enter, если фокус на кнопке — пусть браузер нажмёт её.
+      {
+        const ae = document.activeElement;
+        if (ae && ae.tagName === "BUTTON" && !ae.disabled) break;
+      }
+      e.preventDefault();
+      seekToCurrent();
+      break;
   }
 });
 
 (function tick(){
-  $("#clock").textContent = fmt(audio.currentTime || 0);
+  const cur = audio.currentTime || 0;
+  $("#clock").textContent = fmt(cur);
+
+  if (!userSeeking && audio.duration && isFinite(audio.duration)){
+    const pct = (cur / audio.duration) * 100;
+    progressBar.value = Math.round(pct * 10);
+    progressBar.style.setProperty("--progress", pct + "%");
+  }
+
   requestAnimationFrame(tick);
 })();
 
@@ -1642,13 +2722,97 @@ document.addEventListener("dragover", e => e.preventDefault());
 document.addEventListener("drop", e => {
   e.preventDefault();
   const f = e.dataTransfer.files[0];
-  if (f && f.type.startsWith("audio")) loadAudio(f);
+  if (f && (f.type.startsWith("audio") || f.type.startsWith("video"))) loadAudio(f);
 });
 
+let autosaveDirty = false;
+let autosaveTimer = null;
+
+function markUnsaved(){
+  autosaveDirty = true;
+}
+
+function showAutosaveIndicator(){
+  const el = $("#autosaveHint");
+  if (!el) return;
+  el.textContent = "✓ " + t("autosaveLabel");
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove("show"), 1500);
+}
+
+function saveState(){
+  try {
+    const data = {
+      version: 1,
+      lines: state.lines.map(l => ({
+        time: l.time,
+        isInstrumental: !!l.isInstrumental,
+        words: l.words.map(w => ({ text: w.text, start: w.start }))
+      })),
+      mode: state.mode
+    };
+    localStorage.setItem("lyriq-autosave", JSON.stringify(data));
+    localStorage.setItem("lyriq-autosave-time", Date.now().toString());
+  } catch (e) {}
+}
+
+/* Автосохранение.
+   Идёт раз в 10 секунд, но реальная запись происходит ТОЛЬКО если были изменения
+   (флаг autosaveDirty). Это убирает лишние записи и мигание индикатора,
+   когда пользователь просто читает или слушает, ничего не меняя. */
+function runAutosave(){
+  if (!state.lines.length) return;
+  if (!autosaveDirty) return;
+  saveState();
+  autosaveDirty = false;
+  showAutosaveIndicator();
+}
+
+function loadAutosave(){
+  try {
+    const raw = localStorage.getItem("lyriq-autosave");
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data || !Array.isArray(data.lines) || !data.lines.length) return false;
+
+    state.lines = data.lines.map(l => ({
+      time: l.time,
+      isInstrumental: !!l.isInstrumental,
+      words: (l.words || []).map(w => ({ text: w.text, start: w.start }))
+    }));
+    state.flat = [];
+    for (const l of state.lines) for (const w of l.words) state.flat.push(w);
+
+    state.linePointer = state.lines.findIndex(l => l.time == null && !l.isInstrumental);
+    if (state.linePointer === -1) state.linePointer = state.lines.length;
+    state.wordPointer = state.flat.findIndex(w => w.start == null);
+    if (state.wordPointer === -1) state.wordPointer = state.flat.length;
+
+    if (data.mode === "line" || data.mode === "word"){
+      state.mode = data.mode;
+      document.querySelectorAll('[data-mode]').forEach(x =>
+        x.classList.toggle("active", x.dataset.mode === state.mode));
+    }
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 (function init(){
-  const savedTheme = localStorage.getItem("lrc-theme") || "dark";
-  document.documentElement.setAttribute("data-theme", savedTheme);
-  $("#themeIcon").innerHTML = `<path d="${savedTheme === "dark" ? ICON_MOON : ICON_SUN}"/>`;
+  // Тема: явный выбор пользователя → сохранённый, иначе → системный prefers-color-scheme
+  const savedTheme = localStorage.getItem("lrc-theme");
+  let initialTheme;
+  if (savedTheme === "dark" || savedTheme === "light"){
+    initialTheme = savedTheme;
+  } else {
+    initialTheme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches)
+      ? "light" : "dark";
+  }
+  document.documentElement.setAttribute("data-theme", initialTheme);
+  $("#themeIcon").innerHTML = `<path d="${initialTheme === "dark" ? ICON_MOON : ICON_SUN}"/>`;
 
   const savedLang = localStorage.getItem("lrc-lang") || "en";
   applyTranslations(savedLang);
@@ -1657,13 +2821,30 @@ document.addEventListener("drop", e => {
   const savedCollapsed = localStorage.getItem("lrc-collapsed") === "1";
   setLyricsCollapsed(savedCollapsed);
 
+  const restored = loadAutosave();
+
   const savedSrc = localStorage.getItem("lrc-src");
   if (savedSrc){
     $("#src").value = savedSrc;
-    parseLyrics(savedSrc);
+    if (!restored){
+      parseLyrics(savedSrc);
+    } else {
+      render();
+    }
+  } else {
+    // Нет сохранённого текста — линии пусты, кнопки навигации должны быть отключены.
+    updatePointerButtons();
   }
 
-  setSpeed(1);
+  // Восстанавливаем сохранённую скорость воспроизведения (по умолчанию 1×)
+  const savedSpeed = parseFloat(localStorage.getItem("lrc-speed"));
+  setSpeed((isFinite(savedSpeed) && savedSpeed > 0) ? savedSpeed : 1);
+
+  autosaveTimer = setInterval(runAutosave, 10000);
+
+  window.addEventListener("beforeunload", () => {
+    if (autosaveDirty) saveState();
+  });
 })();
 </script>
 </body>
